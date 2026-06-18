@@ -1,53 +1,92 @@
 import { render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { FEATURED_PROJECTS } from "@/data/projects";
 import { ProjectGrid } from "./ProjectGrid";
 
-const allProjectTitles = FEATURED_PROJECTS.map((project) => project.title);
-
-const interactiveMathTitles = [
-  "Jellybean Parliament",
-  "Word Finder",
-  "Monty's Ballroom",
-  "Galton Decision-Tree",
-  "Phyllotaxis",
-  "Benford's Ledger",
+const filterButtonNames = [
+  "Interactive math",
+  "Cloud & data",
+  "Systems & tools",
+  "All",
 ] as const;
 
-const cloudDataTitles = ["ChipGuard", "CloudSprouts"] as const;
-const systemsToolsTitles = ["Quadsite", "OmpKickbacks"] as const;
+function getProjectCard(title: string) {
+  const card = screen
+    .getAllByTestId("project-card")
+    .find((candidate) =>
+      within(candidate).queryByRole("heading", { level: 3, name: title }),
+    );
 
-function expectVisibleCards(titles: readonly string[]) {
-  const cards = screen.getAllByTestId("project-card");
-  expect(cards).toHaveLength(titles.length);
-
-  const visibleTitles = cards.map((card) =>
-    within(card).getByRole("heading", { level: 3 }).textContent,
-  );
-
-  expect(visibleTitles).toEqual([...titles]);
-
-  for (const title of titles) {
-    expect(screen.getByRole("heading", { level: 3, name: title })).toBeVisible();
+  if (!card) {
+    throw new Error(`Missing project card: ${title}`);
   }
+
+  return card;
 }
 
 describe("ProjectGrid", () => {
-  it("filters featured projects by category", async () => {
-    const user = userEvent.setup();
+  it("renders every featured project without category filters", () => {
     render(<ProjectGrid projects={FEATURED_PROJECTS} />);
 
-    await user.click(screen.getByRole("button", { name: "Interactive math" }));
-    expectVisibleCards(interactiveMathTitles);
+    for (const filterButtonName of filterButtonNames) {
+      expect(
+        screen.queryByRole("button", { name: filterButtonName }),
+      ).not.toBeInTheDocument();
+    }
 
-    await user.click(screen.getByRole("button", { name: "Cloud & data" }));
-    expectVisibleCards(cloudDataTitles);
+    const cards = screen.getAllByTestId("project-card");
+    expect(cards).toHaveLength(11);
 
-    await user.click(screen.getByRole("button", { name: "Systems & tools" }));
-    expectVisibleCards(systemsToolsTitles);
+    const visibleTitles = cards.map((card) =>
+      within(card).getByRole("heading", { level: 3 }).textContent,
+    );
 
-    await user.click(screen.getByRole("button", { name: "All" }));
-    expectVisibleCards(allProjectTitles);
+    expect(visibleTitles).toEqual(
+      FEATURED_PROJECTS.map((project) => project.title),
+    );
+    expect(visibleTitles.at(-1)).toBe("Don't Switch Mics");
+  });
+
+  it("renders dontswitchmics repo only and preserves private repo badges", () => {
+    render(<ProjectGrid projects={FEATURED_PROJECTS} />);
+
+    const dontSwitchMicsCard = getProjectCard("Don't Switch Mics");
+    expect(
+      within(dontSwitchMicsCard).getByRole("link", { name: "GitHub" }),
+    ).toHaveAttribute("href", "https://github.com/TomBonness/dontswitchmics");
+    expect(
+      within(dontSwitchMicsCard).queryByRole("link", { name: "Live site" }),
+    ).not.toBeInTheDocument();
+
+    for (const privateProjectTitle of ["Benford's Ledger", "OmpKickbacks"]) {
+      const privateProjectCard = getProjectCard(privateProjectTitle);
+
+      expect(
+        within(privateProjectCard).getByText("Repo not public yet"),
+      ).toBeInTheDocument();
+      expect(
+        within(privateProjectCard).queryByRole("link", {
+          name: "Repo not public yet",
+        }),
+      ).not.toBeInTheDocument();
+    }
+  });
+
+  it("keeps every signal node on the dotted path", () => {
+    const { container } = render(<ProjectGrid projects={FEATURED_PROJECTS} />);
+    const signalPath = container.querySelector(".signal-curve");
+    const pathData = signalPath?.getAttribute("d") ?? "";
+    const nodes = Array.from(container.querySelectorAll(".signal-node"));
+
+    expect(signalPath).not.toBeNull();
+    expect(nodes).toHaveLength(FEATURED_PROJECTS.length);
+
+    for (const node of nodes) {
+      const transform = node.getAttribute("transform") ?? "";
+      const coordinate = transform.match(/^translate\((\d+) (\d+)\)$/);
+
+      expect(coordinate).not.toBeNull();
+      expect(pathData).toContain(`${coordinate?.[1]} ${coordinate?.[2]}`);
+    }
   });
 });

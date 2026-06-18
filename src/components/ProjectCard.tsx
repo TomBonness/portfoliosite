@@ -57,7 +57,7 @@ export function ProjectCard({
       </ul>
 
       <div className="project-links" aria-label={`${project.title} links`}>
-        <a href={project.liveUrl}>Live site</a>
+        {project.liveUrl ? <a href={project.liveUrl}>Live site</a> : null}
         {project.repoLinks.map((repoLink) =>
           repoLink.href ? (
             <a href={repoLink.href} key={repoLink.href}>

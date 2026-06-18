@@ -4,17 +4,21 @@ import type { KeyboardEvent } from "react";
 import type { Project } from "@/data/projects";
 
 const POINTS = [
-  { x: 30, y: 34 },
-  { x: 96, y: 66 },
-  { x: 160, y: 36 },
-  { x: 224, y: 76 },
-  { x: 310, y: 44 },
-  { x: 58, y: 132 },
-  { x: 130, y: 112 },
-  { x: 202, y: 142 },
-  { x: 264, y: 108 },
-  { x: 328, y: 134 },
+  { x: 28, y: 40 },
+  { x: 86, y: 70 },
+  { x: 144, y: 42 },
+  { x: 202, y: 76 },
+  { x: 260, y: 46 },
+  { x: 326, y: 84 },
+  { x: 62, y: 150 },
+  { x: 128, y: 118 },
+  { x: 194, y: 150 },
+  { x: 260, y: 120 },
+  { x: 326, y: 154 },
 ] as const;
+
+const SIGNAL_PATH =
+  "M28 40 L86 70 L144 42 L202 76 L260 46 L326 84 L62 150 L128 118 L194 150 L260 120 L326 154";
 
 type ProjectSignalFieldProps = {
   projects: readonly Project[];
@@ -42,23 +46,25 @@ export function ProjectSignalField({
   return (
     <div className="signal-field" aria-label="Project signal map">
       <svg
-        viewBox="0 0 360 180"
+        viewBox="0 0 360 190"
         role="img"
         aria-labelledby="signal-title signal-description"
       >
         <title id="signal-title">Project signal map</title>
         <desc id="signal-description">
-          Ten keyboard-focusable project nodes mirror the selected project cards.
+          Eleven keyboard-focusable project nodes mirror the selected project cards.
         </desc>
-        <path className="signal-grid-line" d="M24 34H336" />
-        <path className="signal-grid-line" d="M24 92H336" />
-        <path className="signal-grid-line" d="M24 150H336" />
-        <path
-          className="signal-curve"
-          d="M30 34 C 96 66, 96 66, 160 36 S 224 76, 310 44 M58 132 C 130 112, 130 112, 202 142 S 264 108, 328 134"
-        />
+        <path className="signal-grid-line" d="M24 40H336" />
+        <path className="signal-grid-line" d="M24 96H336" />
+        <path className="signal-grid-line" d="M24 154H336" />
+        <path className="signal-curve" d={SIGNAL_PATH} />
         {projects.map((project, index) => {
-          const point = POINTS[index % POINTS.length];
+          const point = POINTS[index];
+
+          if (!point) {
+            return null;
+          }
+
           const isActive = project.id === activeProjectId;
 
           return (

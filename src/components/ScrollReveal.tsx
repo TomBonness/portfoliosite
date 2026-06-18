@@ -22,9 +22,9 @@ export function ScrollReveal({
       return;
     }
 
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    const prefersReducedMotion =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (prefersReducedMotion || !("IntersectionObserver" in window)) {
       node.dataset.visible = "true";

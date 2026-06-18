@@ -1,12 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import {
-  FEATURED_PROJECTS,
-  PROJECT_FILTERS,
-  type Project,
-  type ProjectFilter,
-} from "@/data/projects";
+import { useEffect, useRef, useState } from "react";
+import { FEATURED_PROJECTS, type Project } from "@/data/projects";
+import { ScrollReveal } from "./ScrollReveal";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectSignalField } from "./ProjectSignalField";
 
@@ -15,57 +11,72 @@ type ProjectGridProps = {
 };
 
 export function ProjectGrid({ projects = FEATURED_PROJECTS }: ProjectGridProps) {
-  const [activeFilter, setActiveFilter] = useState<ProjectFilter>("All");
-  const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
+  const cardShells = useRef<Record<string, HTMLDivElement | null>>({});
+  const [hoveredProjectId, setHoveredProjectId] = useState<string | null>(null);
+  const [scrollProjectId, setScrollProjectId] = useState<string | null>(
+    projects[0]?.id ?? null,
+  );
+  const activeProjectId =
+    hoveredProjectId ?? scrollProjectId ?? projects[0]?.id ?? null;
 
-  const filteredProjects = useMemo(() => {
-    if (activeFilter === "All") {
-      return projects;
+  useEffect(() => {
+    if (!("IntersectionObserver" in window)) {
+      return;
     }
 
-    return projects.filter((project) => project.category === activeFilter);
-  }, [activeFilter, projects]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setScrollProjectId(
+              (entry.target as HTMLElement).dataset.projectId ?? null,
+            );
+          }
+        }
+      },
+      { threshold: 0.42, rootMargin: "-20% 0px -35% 0px" },
+    );
 
-  const updateFilter = (filter: ProjectFilter) => {
-    setActiveFilter(filter);
-    setActiveProjectId(null);
-  };
+    for (const project of projects) {
+      const shell = cardShells.current[project.id];
+
+      if (shell) {
+        observer.observe(shell);
+      }
+    }
+
+    return () => observer.disconnect();
+  }, [projects]);
 
   return (
     <div className="project-system">
-      <div className="filter-row" aria-label="Project filters">
-        {PROJECT_FILTERS.map((filter) => (
-          <button
-            aria-controls="project-list"
-            aria-pressed={activeFilter === filter}
-            className="filter-button"
-            key={filter}
-            onClick={() => updateFilter(filter)}
-            type="button"
-          >
-            {filter}
-          </button>
-        ))}
-      </div>
-
-      <p className="project-count" aria-live="polite">
-        Showing {filteredProjects.length} of {projects.length} projects
-      </p>
-
       <ProjectSignalField
         projects={projects}
         activeProjectId={activeProjectId}
-        onActiveChange={setActiveProjectId}
+        onActiveChange={setHoveredProjectId}
       />
 
       <div className="project-grid" id="project-list">
-        {filteredProjects.map((project) => (
-          <ProjectCard
-            isActive={project.id === activeProjectId}
+        {projects.map((project, index) => (
+          <ScrollReveal
+            className="project-reveal"
+            delay={(index % 3) * 70}
             key={project.id}
-            onActiveChange={setActiveProjectId}
-            project={project}
-          />
+          >
+            <div
+              className="project-card-shell"
+              data-project-id={project.id}
+              ref={(node) => {
+                cardShells.current[project.id] = node;
+              }}
+            >
+              <ProjectCard
+                isActive={project.id === activeProjectId}
+                onActiveChange={setHoveredProjectId}
+                project={project}
+              />
+            </div>
+          </ScrollReveal>
         ))}
       </div>
     </div>

@@ -64,8 +64,11 @@ export default function Home() {
         <section className="hero section-grid" aria-labelledby="hero-title">
           <ScrollReveal className="hero-copy">
             <p className="eyebrow">TOM BONNESS — DEVELOPER PORTFOLIO</p>
-            <h1 id="hero-title">
-              Systems, sensors, and mathematical worlds for the web.
+            <h1 id="hero-title" className="hero-title">
+              <span>Systems,</span>
+              <span>sensors,</span>
+              <span>and mathematical</span>
+              <span>worlds for the web.</span>
             </h1>
             <p className="hero-body">
               I build full-stack experiments and developer tools: AWS-backed
@@ -82,26 +85,20 @@ export default function Home() {
             </div>
           </ScrollReveal>
 
-          <ScrollReveal className="hero-panel" delay={100}>
-            <p className="panel-label">Austin, TX // developer first</p>
-            <dl className="hero-stats" aria-label="Portfolio focus">
-              <div>
-                <dt>10</dt>
-                <dd>featured builds</dd>
-              </div>
-              <div>
-                <dt>AWS</dt>
-                <dd>cloud pipelines</dd>
-              </div>
-              <div>
-                <dt>ESP32</dt>
-                <dd>sensor systems</dd>
-              </div>
-              <div>
-                <dt>AI</dt>
-                <dd>terminal harnesses</dd>
-              </div>
-            </dl>
+          <ScrollReveal className="hero-specimen" delay={100}>
+            <p className="specimen-kicker">Austin, TX // 11 featured systems</p>
+            <div className="specimen-stack" aria-hidden="true">
+              <span>BUILD</span>
+              <span>MEASURE</span>
+              <span>EXPLAIN</span>
+              <span>SHIP</span>
+            </div>
+            <ul className="specimen-list" aria-label="Portfolio focus areas">
+              <li>terminal tools</li>
+              <li>embedded sensors</li>
+              <li>AI harnesses</li>
+              <li>cloud pipelines</li>
+            </ul>
           </ScrollReveal>
         </section>
 
@@ -114,8 +111,8 @@ export default function Home() {
             <p className="eyebrow">01 // SELECTED WORK</p>
             <h2 id="work-title">Selected work</h2>
             <p>
-              Public experiments, cloud dashboards, and tools with a bias
-              toward making the system visible.
+              Eleven public experiments, cloud dashboards, native utilities,
+              and tools with a bias toward making the system visible.
             </p>
           </ScrollReveal>
           <ProjectGrid projects={FEATURED_PROJECTS} />

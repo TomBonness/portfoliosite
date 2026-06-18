@@ -16,7 +16,7 @@ const expectedLiveUrls = [
 
 describe("FEATURED_PROJECTS", () => {
   it("contains exactly the requested featured projects", () => {
-    expect(FEATURED_PROJECTS).toHaveLength(10);
+    expect(FEATURED_PROJECTS).toHaveLength(11);
 
     const ids = FEATURED_PROJECTS.map((project) => project.id);
     expect(ids.every((id, index) => ids.indexOf(id) === index)).toBe(true);
@@ -30,6 +30,24 @@ describe("FEATURED_PROJECTS", () => {
         1,
       );
     }
+  });
+
+  it("includes dontswitchmics without inventing a live URL", () => {
+    const dontSwitchMics = FEATURED_PROJECTS.find(
+      (project) => project.id === "dontswitchmics",
+    );
+
+    expect(dontSwitchMics).toBeDefined();
+    expect(dontSwitchMics?.liveUrl).toBeUndefined();
+    expect(dontSwitchMics?.repoLinks).toEqual([
+      {
+        label: "GitHub",
+        href: "https://github.com/TomBonness/dontswitchmics",
+        status: "confirmed",
+      },
+    ]);
+    expect(dontSwitchMics?.stack).toContain("Swift");
+    expect(dontSwitchMics?.stack).toContain("CoreAudio HAL");
   });
 
   it("keeps repository verification states precise", () => {
@@ -49,7 +67,7 @@ describe("FEATURED_PROJECTS", () => {
     const confirmedRepoLinks = FEATURED_PROJECTS.flatMap((project) =>
       project.repoLinks.filter((repoLink) => repoLink.status === "confirmed"),
     );
-    expect(confirmedRepoLinks).toHaveLength(9);
+    expect(confirmedRepoLinks).toHaveLength(10);
 
     for (const repoLink of confirmedRepoLinks) {
       expect(repoLink.href).toMatch(/^https:\/\/github\.com\/TomBonness\//);

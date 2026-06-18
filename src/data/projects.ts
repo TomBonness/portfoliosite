@@ -1,12 +1,10 @@
-export const PROJECT_FILTERS = [
-  "All",
+export const PROJECT_CATEGORIES = [
   "Interactive math",
   "Cloud & data",
   "Systems & tools",
 ] as const;
 
-export type ProjectFilter = (typeof PROJECT_FILTERS)[number];
-export type ProjectCategory = Exclude<ProjectFilter, "All">;
+export type ProjectCategory = (typeof PROJECT_CATEGORIES)[number];
 export type RepoLink = {
   label: string;
   href?: string;
@@ -17,7 +15,7 @@ export type Project = {
   index: string;
   title: string;
   category: ProjectCategory;
-  liveUrl: string;
+  liveUrl?: string;
   repoLinks: readonly RepoLink[];
   stack: readonly string[];
   summary: string;
@@ -263,5 +261,31 @@ export const FEATURED_PROJECTS = [
       "A full-stack garden sensor pipeline from ESP32 firmware through AWS IoT Core and DynamoDB to a responsive real-time dashboard.",
     teachingAngle:
       "Makes the embedded-to-cloud path legible from physical sensor readings to frontend charts.",
+  },
+  {
+    id: "dontswitchmics",
+    index: "11",
+    title: "Don't Switch Mics",
+    category: "Systems & tools",
+    repoLinks: [
+      {
+        label: "GitHub",
+        href: "https://github.com/TomBonness/dontswitchmics",
+        status: "confirmed",
+      },
+    ],
+    stack: [
+      "Swift",
+      "SwiftUI",
+      "CoreAudio HAL",
+      "macOS menu bar",
+      "SMAppService",
+      "UserDefaults",
+      "CLI",
+    ],
+    summary:
+      "A tiny macOS menu bar utility that watches the system default input device and restores the user-selected microphone when macOS or conferencing apps switch away.",
+    teachingAngle:
+      "Makes CoreAudio device identity, persistence, and one-shot enforcement legible through a menu bar app and deterministic CLI checks.",
   },
 ] satisfies readonly Project[];
