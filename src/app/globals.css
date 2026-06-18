@@ -221,6 +221,10 @@ main {
   color: var(--accent);
 }
 
+.specimen-kicker {
+  text-transform: none;
+}
+
 .hero-title {
   line-height: 0.86;
   letter-spacing: -0.085em;
@@ -318,7 +322,6 @@ main {
   font-weight: 700;
   letter-spacing: 0.12em;
   list-style: none;
-  text-transform: uppercase;
 }
 
 .page-section,
