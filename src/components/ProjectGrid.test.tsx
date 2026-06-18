@@ -72,21 +72,79 @@ describe("ProjectGrid", () => {
     }
   });
 
-  it("keeps every signal node on the dotted path", () => {
+  it("keeps signal nodes on a spacious three-row runway", () => {
     const { container } = render(<ProjectGrid projects={FEATURED_PROJECTS} />);
-    const signalPath = container.querySelector(".signal-curve");
-    const pathData = signalPath?.getAttribute("d") ?? "";
+    const svg = container.querySelector("svg");
+    const signalCurve = container.querySelector(".signal-curve");
+    const signalConnector = container.querySelector(".signal-connector");
     const nodes = Array.from(container.querySelectorAll(".signal-node"));
 
-    expect(signalPath).not.toBeNull();
+    expect(svg?.getAttribute("viewBox")).toBe("0 0 420 270");
+    expect(signalCurve?.getAttribute("d")).toBe(
+      "M34 48 H316 M80 132 H362 M128 222 H316",
+    );
+    expect(signalConnector?.getAttribute("d")).toBe(
+      "M316 48 V132 M80 132 V222",
+    );
     expect(nodes).toHaveLength(FEATURED_PROJECTS.length);
 
-    for (const node of nodes) {
+    const centers = nodes.map((node) => {
       const transform = node.getAttribute("transform") ?? "";
-      const coordinate = transform.match(/^translate\((\d+) (\d+)\)$/);
+      const match = transform.match(/^translate\((\d+) (\d+)\)$/);
 
-      expect(coordinate).not.toBeNull();
-      expect(pathData).toContain(`${coordinate?.[1]} ${coordinate?.[2]}`);
+      if (!match) {
+        throw new Error(`Invalid signal node transform: ${transform}`);
+      }
+
+      return {
+        transform,
+        x: Number(match[1]),
+        y: Number(match[2]),
+      };
+    });
+
+    expect(new Set(centers.map(({ transform }) => transform)).size).toBe(11);
+    expect(
+      nodes
+        .find((node) => node.getAttribute("aria-label") === "08 OmpKickbacks")
+        ?.getAttribute("transform"),
+    ).toBe("translate(362 132)");
+
+    let minimumDistance = Number.POSITIVE_INFINITY;
+
+    for (const [index, center] of centers.entries()) {
+      for (const comparison of centers.slice(index + 1)) {
+        minimumDistance = Math.min(
+          minimumDistance,
+          Math.hypot(center.x - comparison.x, center.y - comparison.y),
+        );
+      }
+    }
+
+    expect(minimumDistance).toBeGreaterThanOrEqual(90);
+  });
+
+  it("preserves project card layout hooks", () => {
+    const { container } = render(<ProjectGrid projects={FEATURED_PROJECTS} />);
+    const shells = Array.from(
+      container.querySelectorAll(
+        ".project-grid > .project-reveal > .project-card-shell[data-project-id]",
+      ),
+    );
+
+    expect(shells).toHaveLength(FEATURED_PROJECTS.length);
+
+    for (const shell of shells) {
+      const cards = shell.querySelectorAll(
+        '[data-testid="project-card"].project-card',
+      );
+
+      expect(cards).toHaveLength(1);
+      expect(cards[0]?.querySelector(".project-index")).not.toBeNull();
+      expect(cards[0]?.querySelector(".project-category")).not.toBeNull();
+      expect(cards[0]?.querySelector(".teaching-angle")).not.toBeNull();
+      expect(cards[0]?.querySelector(".stack-list")).not.toBeNull();
+      expect(cards[0]?.querySelector(".project-links")).not.toBeNull();
     }
   });
 });

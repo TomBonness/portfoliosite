@@ -123,7 +123,7 @@ export default function Home() {
           className="page-section teaching-section"
           aria-labelledby="teaching-title"
         >
-          <ScrollReveal className="section-heading">
+          <ScrollReveal className="section-heading" direction="left">
             <p className="eyebrow">02 // TEACHING SURFACE</p>
             <h2 id="teaching-title">Teaching through interfaces</h2>
             <p>
@@ -137,7 +137,8 @@ export default function Home() {
             {teachingCards.map((card, index) => (
               <ScrollReveal
                 className="teaching-card"
-                delay={index * 80}
+                delay={index * 90}
+                direction={index % 2 === 0 ? "left" : "right"}
                 key={card.title}
               >
                 <span className="card-index">
@@ -155,7 +156,7 @@ export default function Home() {
           className="page-section stack-section"
           aria-labelledby="stack-title"
         >
-          <ScrollReveal className="section-heading">
+          <ScrollReveal className="section-heading" direction="right">
             <p className="eyebrow">03 // STACK</p>
             <h2 id="stack-title">Stack</h2>
             <p>
@@ -168,7 +169,8 @@ export default function Home() {
             {stackGroups.map((group, index) => (
               <ScrollReveal
                 className="stack-card"
-                delay={index * 70}
+                delay={index * 80}
+                direction={index % 2 === 0 ? "right" : "left"}
                 key={group.title}
               >
                 <h3>{group.title}</h3>
@@ -188,7 +190,7 @@ export default function Home() {
         className="page-section site-footer"
         aria-labelledby="contact-title"
       >
-        <ScrollReveal className="section-heading">
+        <ScrollReveal className="section-heading" direction="left">
           <p className="eyebrow">04 // CONTACT</p>
           <h2 id="contact-title">Contact</h2>
           <p>
@@ -196,10 +198,10 @@ export default function Home() {
             data fetches, or server endpoints on this static portfolio.
           </p>
         </ScrollReveal>
-        <div className="footer-links" aria-label="Contact links">
+        <ScrollReveal className="footer-links" delay={120} direction="right">
           <a href="https://github.com/TomBonness">GitHub</a>
           <a href="https://www.linkedin.com/in/bonness/">LinkedIn</a>
-        </div>
+        </ScrollReveal>
       </footer>
     </>
   );

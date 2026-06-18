@@ -3,17 +3,28 @@
 import type React from "react";
 import { useEffect, useRef } from "react";
 
+type RevealDirection = "up" | "left" | "right";
+
+type ScrollRevealProps = {
+  children: React.ReactNode;
+  className?: string;
+  delay?: number;
+  direction?: RevealDirection;
+};
+
+const revealOffsets: Record<RevealDirection, { x: string; y: string }> = {
+  up: { x: "0px", y: "24px" },
+  left: { x: "-42px", y: "0px" },
+  right: { x: "42px", y: "0px" },
+};
+
 export function ScrollReveal({
   children,
   className = "",
   delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
+  direction = "up",
+}: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-
 
   useEffect(() => {
     const node = ref.current;
@@ -53,13 +64,19 @@ export function ScrollReveal({
     return () => observer.disconnect();
   }, []);
 
-  const style = { "--reveal-delay": `${delay}ms` } as React.CSSProperties;
+  const offset = revealOffsets[direction];
+  const style = {
+    "--reveal-delay": `${delay}ms`,
+    "--reveal-x": offset.x,
+    "--reveal-y": offset.y,
+  } as React.CSSProperties;
 
   return (
     <div
       ref={ref}
       className={["reveal", className].filter(Boolean).join(" ")}
       style={style}
+      data-reveal-direction={direction}
     >
       {children}
     </div>

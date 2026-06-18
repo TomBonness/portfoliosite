@@ -409,6 +409,14 @@ main {
   stroke-width: 1.5;
 }
 
+.signal-connector {
+  fill: none;
+  stroke: color-mix(in srgb, var(--ink) 42%, transparent);
+  stroke-dasharray: 2 10;
+  stroke-linecap: round;
+  stroke-width: 1.5;
+}
+
 .signal-node {
   cursor: pointer;
 }
@@ -436,7 +444,7 @@ main {
 .signal-node:focus circle,
 .signal-node:focus-visible circle {
   fill: var(--accent);
-  r: 17;
+  r: 15;
   stroke-width: 3;
 }
 
@@ -451,26 +459,34 @@ main {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1px;
+  align-items: stretch;
   background: var(--line);
   border: 1px solid var(--line);
 }
 
-.project-reveal,
+.project-reveal {
+  display: flex;
+  min-width: 0;
+  min-height: 100%;
+}
+
 .project-card-shell {
+  display: flex;
+  width: 100%;
+  min-width: 0;
   min-height: 100%;
 }
 
 .project-card {
-  display: flex;
-  min-height: 520px;
+  display: grid;
+  grid-template-rows: auto auto minmax(7.5rem, auto) minmax(5.5rem, auto) 1fr auto;
+  gap: 22px;
+  min-height: 620px;
   height: 100%;
-  flex-direction: column;
-  gap: 24px;
   padding: clamp(20px, 2.4vw, 34px);
   background: var(--paper);
   transition:
     background 180ms ease,
-    transform 180ms ease,
     box-shadow 180ms ease;
 }
 
@@ -479,7 +495,6 @@ main {
 .project-card:hover {
   background: #ffffff;
   box-shadow: inset 0 0 0 3px var(--ink);
-  transform: translateY(-4px);
 }
 
 .project-card-header {
@@ -502,20 +517,9 @@ main {
 }
 
 .project-card h3 {
-  max-width: 11ch;
+  max-width: 12ch;
 }
 
-.project-reveal:nth-child(3n + 1) .project-card h3 {
-  max-width: 13ch;
-}
-
-.project-reveal:nth-child(3n + 2) .project-card h3 {
-  letter-spacing: -0.075em;
-}
-
-.project-reveal:nth-child(3n) .project-index {
-  color: var(--accent-blue);
-}
 
 .teaching-angle {
   border-left: 3px solid var(--accent);
@@ -528,7 +532,8 @@ main {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: auto 0 0;
+  margin: 0;
+  align-self: end;
   padding: 0;
   list-style: none;
 }
@@ -550,6 +555,7 @@ main {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  align-self: end;
 }
 
 .project-links a,
@@ -620,6 +626,131 @@ main {
   text-transform: uppercase;
 }
 
+.teaching-section,
+.stack-section,
+.site-footer {
+  position: relative;
+  overflow: hidden;
+}
+
+.teaching-section > *,
+.stack-section > *,
+.site-footer > * {
+  position: relative;
+  z-index: 1;
+}
+
+.teaching-section {
+  background: var(--ink);
+  box-shadow: 0 0 0 100vmax var(--ink);
+  clip-path: inset(0 -100vmax);
+  color: var(--paper);
+}
+
+.teaching-section::before {
+  content: "TEACH";
+  position: absolute;
+  top: clamp(40px, 7vw, 96px);
+  right: calc(var(--gutter) * -0.35);
+  z-index: 0;
+  color: transparent;
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(7rem, 18vw, 22rem);
+  font-weight: 800;
+  letter-spacing: -0.14em;
+  line-height: 0.8;
+  opacity: 0.28;
+  pointer-events: none;
+  -webkit-text-stroke: 1px color-mix(in srgb, var(--paper) 42%, transparent);
+}
+
+.teaching-section h2,
+.teaching-section h3 {
+  color: var(--paper);
+}
+
+.teaching-section p {
+  color: color-mix(in srgb, var(--paper) 78%, transparent);
+}
+
+.teaching-section .eyebrow,
+.teaching-section .card-index {
+  color: var(--accent);
+}
+
+.teaching-section .teaching-card {
+  min-height: 420px;
+  border: 1px solid color-mix(in srgb, var(--paper) 22%, transparent);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 22%, transparent), transparent 42%),
+    color-mix(in srgb, var(--paper) 7%, var(--ink));
+}
+
+.stack-section::before {
+  content: "STACK";
+  position: absolute;
+  left: var(--gutter);
+  bottom: clamp(24px, 5vw, 64px);
+  z-index: 0;
+  color: transparent;
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(7rem, 18vw, 22rem);
+  font-weight: 800;
+  letter-spacing: -0.14em;
+  line-height: 0.8;
+  opacity: 0.18;
+  pointer-events: none;
+  -webkit-text-stroke: 1px var(--accent-blue);
+}
+
+.stack-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--accent-blue) 16%, transparent) 0 1px, transparent 1px 72px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--ink) 8%, transparent) 0 1px, transparent 1px 72px);
+  mask-image: linear-gradient(180deg, transparent, black 22%, black 78%, transparent);
+}
+
+.stack-card {
+  border-top: 4px solid var(--accent-blue);
+}
+
+.stack-card:nth-child(2n) {
+  border-top-color: var(--accent);
+}
+
+.site-footer {
+  background: var(--accent);
+  box-shadow: 0 0 0 100vmax var(--accent);
+  clip-path: inset(0 -100vmax);
+  color: var(--paper);
+}
+
+.site-footer h2,
+.site-footer p {
+  color: var(--paper);
+}
+
+.site-footer .eyebrow {
+  color: var(--ink);
+}
+
+.site-footer .footer-links a {
+  border-color: var(--paper);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.site-footer .footer-links a:hover {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
 .site-footer {
   display: grid;
   gap: 28px;
@@ -640,7 +771,7 @@ main {
 
 .reveal[data-visible="false"] {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translate3d(var(--reveal-x, 0px), var(--reveal-y, 24px), 0);
 }
 
 .reveal[data-visible="true"] {
@@ -716,7 +847,7 @@ main {
   }
 
   .project-card {
-    min-height: auto;
+    min-height: 640px;
   }
 }
 

@@ -4,21 +4,21 @@ import type { KeyboardEvent } from "react";
 import type { Project } from "@/data/projects";
 
 const POINTS = [
-  { x: 28, y: 40 },
-  { x: 86, y: 70 },
-  { x: 144, y: 42 },
-  { x: 202, y: 76 },
-  { x: 260, y: 46 },
-  { x: 326, y: 84 },
-  { x: 62, y: 150 },
-  { x: 128, y: 118 },
-  { x: 194, y: 150 },
-  { x: 260, y: 120 },
-  { x: 326, y: 154 },
+  { x: 34, y: 48 },
+  { x: 128, y: 48 },
+  { x: 222, y: 48 },
+  { x: 316, y: 48 },
+  { x: 80, y: 132 },
+  { x: 174, y: 132 },
+  { x: 268, y: 132 },
+  { x: 362, y: 132 },
+  { x: 128, y: 222 },
+  { x: 222, y: 222 },
+  { x: 316, y: 222 },
 ] as const;
 
-const SIGNAL_PATH =
-  "M28 40 L86 70 L144 42 L202 76 L260 46 L326 84 L62 150 L128 118 L194 150 L260 120 L326 154";
+const SIGNAL_PATH = "M34 48 H316 M80 132 H362 M128 222 H316";
+const SIGNAL_CONNECTORS = "M316 48 V132 M80 132 V222";
 
 type ProjectSignalFieldProps = {
   projects: readonly Project[];
@@ -46,7 +46,7 @@ export function ProjectSignalField({
   return (
     <div className="signal-field" aria-label="Project signal map">
       <svg
-        viewBox="0 0 360 190"
+        viewBox="0 0 420 270"
         role="img"
         aria-labelledby="signal-title signal-description"
       >
@@ -54,10 +54,11 @@ export function ProjectSignalField({
         <desc id="signal-description">
           Eleven keyboard-focusable project nodes mirror the selected project cards.
         </desc>
-        <path className="signal-grid-line" d="M24 40H336" />
-        <path className="signal-grid-line" d="M24 96H336" />
-        <path className="signal-grid-line" d="M24 154H336" />
+        <path className="signal-grid-line" d="M24 48H396" />
+        <path className="signal-grid-line" d="M24 132H396" />
+        <path className="signal-grid-line" d="M24 222H396" />
         <path className="signal-curve" d={SIGNAL_PATH} />
+        <path className="signal-connector" d={SIGNAL_CONNECTORS} />
         {projects.map((project, index) => {
           const point = POINTS[index];
 
@@ -85,7 +86,7 @@ export function ProjectSignalField({
               onMouseLeave={() => onActiveChange(null)}
               onKeyDown={(event) => handleKeyDown(event, project.id)}
             >
-              <circle r="13" />
+              <circle r="11" />
               <text y="4" textAnchor="middle">
                 {project.index}
               </text>
