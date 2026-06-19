@@ -7,8 +7,13 @@ function expectRevealDirection(element: Element | null, direction: string) {
   expect(element).toHaveAttribute("data-reveal-direction", direction);
 }
 
+function expectRevealRepeat(element: Element | null, repeat: string) {
+  expect(element).not.toBeNull();
+  expect(element).toHaveAttribute("data-reveal-repeat", repeat);
+}
+
 describe("Home", () => {
-  it("keeps the hero and applies lower-section reveal directions", () => {
+  it("keeps the hero and applies lower-section reveal settings", () => {
     const { container } = render(<Home />);
 
     const heroTitle = container.querySelector("#hero-title");
@@ -18,6 +23,16 @@ describe("Home", () => {
 
     expect(heroText).toBe(
       "Systems, sensors, and mathematical worlds for the web.",
+    );
+
+    expectRevealDirection(
+      screen
+        .getByRole("heading", {
+          level: 2,
+          name: "Selected work",
+        })
+        .closest(".reveal"),
+      "left",
     );
 
     expectRevealDirection(
@@ -46,7 +61,7 @@ describe("Home", () => {
       screen
         .getByRole("heading", { level: 2, name: "Stack" })
         .closest(".reveal"),
-      "right",
+      "left",
     );
     expectRevealDirection(
       screen
@@ -61,8 +76,48 @@ describe("Home", () => {
       "left",
     );
 
+    expectRevealDirection(
+      screen
+        .getByRole("heading", { level: 2, name: "Contact" })
+        .closest(".reveal"),
+      "left",
+    );
+
     const footerLinks = container.querySelector(".reveal.footer-links");
 
     expectRevealDirection(footerLinks, "right");
+
+    expectRevealRepeat(
+      screen
+        .getByRole("heading", { level: 2, name: "Selected work" })
+        .closest(".reveal"),
+      "false",
+    );
+    expectRevealRepeat(
+      screen
+        .getByRole("heading", {
+          level: 2,
+          name: "Teaching through interfaces",
+        })
+        .closest(".reveal"),
+      "true",
+    );
+    expectRevealRepeat(
+      screen.getByText("Crowd intelligence").closest(".reveal"),
+      "true",
+    );
+    expectRevealRepeat(
+      screen
+        .getByRole("heading", { level: 2, name: "Stack" })
+        .closest(".reveal"),
+      "true",
+    );
+    expectRevealRepeat(
+      screen
+        .getByRole("heading", { level: 2, name: "Contact" })
+        .closest(".reveal"),
+      "true",
+    );
+    expectRevealRepeat(footerLinks, "true");
   });
 });

@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { FEATURED_PROJECTS } from "@/data/projects";
 import { ProjectGrid } from "./ProjectGrid";
@@ -72,56 +72,56 @@ describe("ProjectGrid", () => {
     }
   });
 
-  it("keeps signal nodes on a spacious three-row runway", () => {
+  it("replaces the signal map with an editorial project index", () => {
     const { container } = render(<ProjectGrid projects={FEATURED_PROJECTS} />);
-    const svg = container.querySelector("svg");
-    const signalCurve = container.querySelector(".signal-curve");
-    const signalConnector = container.querySelector(".signal-connector");
-    const nodes = Array.from(container.querySelectorAll(".signal-node"));
 
-    expect(svg?.getAttribute("viewBox")).toBe("0 0 420 270");
-    expect(signalCurve?.getAttribute("d")).toBe(
-      "M34 48 H316 M80 132 H362 M128 222 H316",
-    );
-    expect(signalConnector?.getAttribute("d")).toBe(
-      "M316 48 V132 M80 132 V222",
-    );
-    expect(nodes).toHaveLength(FEATURED_PROJECTS.length);
-
-    const centers = nodes.map((node) => {
-      const transform = node.getAttribute("transform") ?? "";
-      const match = transform.match(/^translate\((\d+) (\d+)\)$/);
-
-      if (!match) {
-        throw new Error(`Invalid signal node transform: ${transform}`);
-      }
-
-      return {
-        transform,
-        x: Number(match[1]),
-        y: Number(match[2]),
-      };
-    });
-
-    expect(new Set(centers.map(({ transform }) => transform)).size).toBe(11);
+    expect(container.querySelector(".signal-field")).toBeNull();
+    expect(container.querySelector(".signal-node")).toBeNull();
     expect(
-      nodes
-        .find((node) => node.getAttribute("aria-label") === "08 OmpKickbacks")
-        ?.getAttribute("transform"),
-    ).toBe("translate(362 132)");
+      screen.queryByRole("img", { name: /project signal map/i }),
+    ).not.toBeInTheDocument();
 
-    let minimumDistance = Number.POSITIVE_INFINITY;
+    const overview = container.querySelector(".project-overview");
+    expect(overview).not.toBeNull();
 
-    for (const [index, center] of centers.entries()) {
-      for (const comparison of centers.slice(index + 1)) {
-        minimumDistance = Math.min(
-          minimumDistance,
-          Math.hypot(center.x - comparison.x, center.y - comparison.y),
-        );
-      }
-    }
+    const items = Array.from(
+      container.querySelectorAll(".project-overview-item[data-project-id]"),
+    );
+    expect(items).toHaveLength(FEATURED_PROJECTS.length);
+    expect(items.map((item) => item.getAttribute("data-project-id"))).toEqual(
+      FEATURED_PROJECTS.map((project) => project.id),
+    );
+    expect(
+      within(overview as HTMLElement).getAllByRole("button"),
+    ).toHaveLength(FEATURED_PROJECTS.length);
 
-    expect(minimumDistance).toBeGreaterThanOrEqual(90);
+    const firstItem = items[0] as HTMLElement;
+    expect(firstItem).toHaveTextContent("01");
+    expect(firstItem).toHaveTextContent("Jellybean Parliament");
+    const lastItem = items.at(-1) as HTMLElement;
+    expect(lastItem).toHaveTextContent("11");
+    expect(lastItem).toHaveTextContent("Don't Switch Mics");
+  });
+
+  it("mirrors the active project between the index and the cards", () => {
+    const { container } = render(<ProjectGrid projects={FEATURED_PROJECTS} />);
+    const target = FEATURED_PROJECTS[2];
+    const item = container.querySelector(
+      `.project-overview-item[data-project-id="${target.id}"]`,
+    ) as HTMLElement;
+    const button = within(item).getByRole("button");
+
+    fireEvent.mouseEnter(button);
+    expect(item).toHaveAttribute("data-active", "true");
+    expect(button).toHaveAttribute("aria-pressed", "true");
+    expect(
+      container.querySelector(
+        `.project-card-shell[data-project-id="${target.id}"] .project-card`,
+      ),
+    ).toHaveAttribute("data-active", "true");
+
+    fireEvent.mouseLeave(button);
+    expect(item).toHaveAttribute("data-active", "false");
   });
 
   it("preserves project card layout hooks", () => {

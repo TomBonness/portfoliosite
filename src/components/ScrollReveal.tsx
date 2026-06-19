@@ -10,6 +10,7 @@ type ScrollRevealProps = {
   className?: string;
   delay?: number;
   direction?: RevealDirection;
+  repeat?: boolean;
 };
 
 const revealOffsets: Record<RevealDirection, { x: string; y: string }> = {
@@ -18,11 +19,18 @@ const revealOffsets: Record<RevealDirection, { x: string; y: string }> = {
   right: { x: "42px", y: "0px" },
 };
 
+const repeatRevealOffsets: Record<RevealDirection, { x: string; y: string }> = {
+  up: { x: "0px", y: "72px" },
+  left: { x: "-110px", y: "0px" },
+  right: { x: "110px", y: "0px" },
+};
+
 export function ScrollReveal({
   children,
   className = "",
   delay = 0,
   direction = "up",
+  repeat = false,
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -46,12 +54,19 @@ export function ScrollReveal({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry?.isIntersecting) {
+        if (!entry) {
           return;
         }
 
-        node.dataset.visible = "true";
-        observer.disconnect();
+        if (repeat) {
+          node.dataset.visible = entry.isIntersecting ? "true" : "false";
+          return;
+        }
+
+        if (entry.isIntersecting) {
+          node.dataset.visible = "true";
+          observer.disconnect();
+        }
       },
       {
         threshold: 0.18,
@@ -62,9 +77,9 @@ export function ScrollReveal({
     observer.observe(node);
 
     return () => observer.disconnect();
-  }, []);
+  }, [repeat]);
 
-  const offset = revealOffsets[direction];
+  const offset = (repeat ? repeatRevealOffsets : revealOffsets)[direction];
   const style = {
     "--reveal-delay": `${delay}ms`,
     "--reveal-x": offset.x,
@@ -77,6 +92,7 @@ export function ScrollReveal({
       className={["reveal", className].filter(Boolean).join(" ")}
       style={style}
       data-reveal-direction={direction}
+      data-reveal-repeat={repeat ? "true" : "false"}
     >
       {children}
     </div>

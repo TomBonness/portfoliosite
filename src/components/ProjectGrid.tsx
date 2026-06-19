@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { FEATURED_PROJECTS, type Project } from "@/data/projects";
 import { ScrollReveal } from "./ScrollReveal";
 import { ProjectCard } from "./ProjectCard";
-import { ProjectSignalField } from "./ProjectSignalField";
+import { ProjectOverview } from "./ProjectOverview";
 
 type ProjectGridProps = {
   projects?: readonly Project[];
@@ -48,12 +48,31 @@ export function ProjectGrid({ projects = FEATURED_PROJECTS }: ProjectGridProps) 
     return () => observer.disconnect();
   }, [projects]);
 
+  const handleSelectProject = (projectId: string) => {
+    setHoveredProjectId(projectId);
+    const shell = cardShells.current[projectId];
+
+    if (!shell) {
+      return;
+    }
+
+    const prefersReducedMotion =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    shell.scrollIntoView({
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+      block: "center",
+    });
+  };
+
   return (
     <div className="project-system">
-      <ProjectSignalField
+      <ProjectOverview
         projects={projects}
         activeProjectId={activeProjectId}
         onActiveChange={setHoveredProjectId}
+        onSelect={handleSelectProject}
       />
 
       <div className="project-grid" id="project-list">

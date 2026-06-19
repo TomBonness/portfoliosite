@@ -357,23 +357,37 @@ main {
   z-index: 1;
 }
 
+.work-section::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 0;
+  width: 100vw;
+  height: clamp(180px, 26vh, 360px);
+  transform: translateX(-50%);
+  background: linear-gradient(180deg, transparent, var(--ink));
+  pointer-events: none;
+}
+
 .section-heading {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: clamp(18px, 3vw, 48px);
+  gap: clamp(14px, 2vw, 28px) clamp(18px, 3vw, 48px);
   margin-bottom: clamp(36px, 6vw, 84px);
 }
 
 .section-heading .eyebrow {
-  grid-column: span 3;
+  grid-column: 1 / span 12;
+  margin-bottom: 0;
 }
 
 .section-heading h2 {
-  grid-column: 4 / span 5;
+  grid-column: 1 / span 7;
 }
 
 .section-heading p:not(.eyebrow) {
-  grid-column: 9 / span 4;
+  grid-column: 8 / span 5;
   align-self: end;
 }
 
@@ -383,76 +397,99 @@ main {
 }
 
 
-.signal-field {
+.project-overview {
   border: 1px solid var(--line);
   background: var(--paper);
-  padding: clamp(16px, 3vw, 36px);
 }
 
-.signal-field svg {
-  display: block;
+.project-overview-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-overview-item {
+  border-top: 1px solid var(--line);
+}
+
+.project-overview-item:first-child {
+  border-top: 0;
+}
+
+.project-overview-link {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(12px, 2vw, 24px);
   width: 100%;
-  height: auto;
-  overflow: visible;
-}
-
-.signal-grid-line {
-  stroke: var(--line);
-  stroke-width: 1;
-}
-
-.signal-curve {
-  fill: none;
-  stroke: var(--ink);
-  stroke-dasharray: 2 10;
-  stroke-linecap: round;
-  stroke-width: 1.5;
-}
-
-.signal-connector {
-  fill: none;
-  stroke: color-mix(in srgb, var(--ink) 42%, transparent);
-  stroke-dasharray: 2 10;
-  stroke-linecap: round;
-  stroke-width: 1.5;
-}
-
-.signal-node {
+  padding: clamp(12px, 1.4vw, 18px) clamp(14px, 2vw, 26px);
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
   cursor: pointer;
-}
-
-.signal-node circle {
-  fill: var(--paper);
-  stroke: var(--ink);
-  stroke-width: 1.5;
   transition:
-    fill 180ms ease,
-    r 180ms ease,
-    stroke-width 180ms ease;
+    background 160ms ease,
+    color 160ms ease;
 }
 
-.signal-node text {
-  fill: var(--ink);
+.project-overview-index {
+  color: var(--accent);
+  font-family: var(--font-mono), monospace;
+  font-size: clamp(1.1rem, 2vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  transition: color 160ms ease;
+}
+
+.project-overview-name {
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.project-overview-tag {
+  justify-self: end;
+  color: var(--muted);
   font-family: var(--font-mono), monospace;
   font-size: 0.66rem;
   font-weight: 700;
-  pointer-events: none;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color 160ms ease;
 }
 
-.signal-node[data-active="true"] circle,
-.signal-node:hover circle,
-.signal-node:focus circle,
-.signal-node:focus-visible circle {
-  fill: var(--accent);
-  r: 15;
-  stroke-width: 3;
+.project-overview-item[data-active="true"] .project-overview-link,
+.project-overview-link:hover,
+.project-overview-link:focus-visible {
+  background: var(--accent);
+  color: var(--paper);
 }
 
-.signal-node[data-active="true"] text,
-.signal-node:hover text,
-.signal-node:focus text,
-.signal-node:focus-visible text {
-  fill: var(--paper);
+.project-overview-item[data-active="true"] .project-overview-index,
+.project-overview-item[data-active="true"] .project-overview-tag,
+.project-overview-link:hover .project-overview-index,
+.project-overview-link:hover .project-overview-tag,
+.project-overview-link:focus-visible .project-overview-index,
+.project-overview-link:focus-visible .project-overview-tag {
+  color: var(--paper);
+}
+
+@media (min-width: 760px) {
+  .project-overview-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .project-overview-item:nth-child(2) {
+    border-top: 0;
+  }
+
+  .project-overview-item:nth-child(odd) {
+    border-right: 1px solid var(--line);
+  }
 }
 
 .project-grid {
@@ -641,6 +678,7 @@ main {
 }
 
 .teaching-section {
+  border-top: 0;
   background: var(--ink);
   box-shadow: 0 0 0 100vmax var(--ink);
   clip-path: inset(0 -100vmax);
@@ -864,8 +902,7 @@ main {
   .reveal,
   .reveal[data-visible="false"],
   .reveal[data-visible="true"],
-  .project-card,
-  .signal-node circle {
+  .project-card {
     opacity: 1;
     transform: none;
   }
