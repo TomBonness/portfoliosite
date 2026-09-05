@@ -1,209 +1,315 @@
+import Image from "next/image";
 import { ProjectGrid } from "@/components/ProjectGrid";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { FEATURED_PROJECTS } from "@/data/projects";
+import { SeedStudy } from "@/components/SeedStudy";
+import { FEATURED_PROJECTS, LAB_PROJECTS, LAB_URL } from "@/data/projects";
 
-const teachingCards = [
+const disciplines = [
   {
-    title: "Crowd intelligence",
-    body: "Jellybean Parliament and Word Finder turn anonymous visitor behavior into visible aggregate patterns, making distribution, rediscovery, and collective judgment easier to inspect.",
+    title: "On the screen",
+    description: "Interfaces, experiments, and tools for getting things done.",
+    tools: "TypeScript · React · Next.js · Swift",
   },
   {
-    title: "Mathematical intuition",
-    body: "Monty's Ballroom, Galton Decision-Tree, Phyllotaxis, and Benford's Ledger expose the mechanism behind probability, convergence, packing, and forensic statistics instead of hiding it behind formulas.",
+    title: "Under the hood",
+    description:
+      "The data pipelines and services that keep everything talking.",
+    tools: "AWS · Python · PyTorch · Rust",
   },
   {
-    title: "Cloud instrumentation",
-    body: "ChipGuard and CloudSprouts make telemetry, drift, sensor readings, and API-backed system state readable from the browser so the data path stays explainable.",
+    title: "Out in the world",
+    description: "Firmware, sensors, and the occasional thing with propellers.",
+    tools: "C / C++ · ESP32 · ESP-IDF · MQTT",
   },
-] as const;
+];
 
-const stackGroups = [
-  {
-    title: "Frontend",
-    skills: ["TypeScript", "React", "Next.js", "Vite", "TailwindCSS/CSS"],
-  },
-  {
-    title: "Cloud / backend",
-    skills: [
-      "AWS Amplify",
-      "Lambda",
-      "DynamoDB",
-      "API Gateway",
-      "AWS IoT Core",
-    ],
-  },
-  {
-    title: "ML / data",
-    skills: ["PyTorch", "Flask", "SQLite", "drift detection"],
-  },
-  {
-    title: "Embedded / low-level",
-    skills: ["C", "C++", "Rust", "ESP32", "ESP-IDF", "MQTT"],
-  },
-] as const;
+function Arrow() {
+  return <span aria-hidden="true">↗</span>;
+}
 
 export default function Home() {
   return (
     <>
-      <header className="site-header" aria-label="Primary navigation">
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
+      <header className="site-header">
         <ScrollProgress />
-        <a className="wordmark" href="#top" aria-label="Tom Bonness home">
-          TB
-        </a>
-        <nav className="site-nav" aria-label="Portfolio sections">
-          <a href="#work">Work</a>
-          <a href="#teaching">Teaching</a>
-          <a href="#stack">Stack</a>
-          <a href="#contact">Contact</a>
-          <a href="https://github.com/TomBonness">GitHub</a>
-        </nav>
+        <div className="header-inner">
+          <a className="wordmark" href="#top" aria-label="Tom Bonness home">
+            <span>
+              Tom Bonness<span className="wordmark-period">.</span>
+            </span>
+          </a>
+          <nav className="site-nav" aria-label="Portfolio sections">
+            <a href="#lab">The lab</a>
+            <a href="#work">Projects</a>
+            <a href="#about">About</a>
+            <a className="nav-contact" href="#contact">
+              Say hello <Arrow />
+            </a>
+          </nav>
+        </div>
       </header>
 
-      <main id="top">
-        <section className="hero section-grid" aria-labelledby="hero-title">
-          <ScrollReveal className="hero-copy">
-            <p className="eyebrow">TOM BONNESS — DEVELOPER PORTFOLIO</p>
-            <h1 id="hero-title" className="hero-title">
-              <span>Systems,</span>
-              <span>sensors,</span>
-              <span>and mathematical</span>
-              <span>worlds for the web.</span>
+      <main id="main">
+        <section
+          className="hero page-width"
+          id="top"
+          aria-labelledby="hero-title"
+        >
+          <div className="hero-copy">
+            <h1 id="hero-title">
+              I learn by
+              <br />
+              <em>making things.</em>
             </h1>
             <p className="hero-body">
-              I build full-stack experiments and developer tools: AWS-backed
-              visualizations, embedded sensor pipelines, and interfaces that
-              make hard ideas inspectable.
+              I’m Tom. I build tools I want to use, hardware I can hold, and
+              little experiments that make the math click.
             </p>
-            <div className="hero-actions" aria-label="Primary actions">
-              <a className="button button-primary" href="#work">
-                View selected work
+            <div className="hero-actions">
+              <a className="button button-primary" href="#lab">
+                Step inside <span aria-hidden="true">↓</span>
               </a>
-              <a className="button button-secondary" href="https://github.com/TomBonness">
-                GitHub
+              <a className="text-link" href="https://github.com/TomBonness">
+                Browse the code <Arrow />
               </a>
             </div>
-          </ScrollReveal>
+            <p className="hero-footnote">
+              Software, hardware, and the interesting bits in between.
+            </p>
+          </div>
+          <div className="hero-study">
+            <SeedStudy />
+          </div>
+          <div className="hero-baseline mono">
+            <span>A notebook of things I’ve made</span>
+            <a href="#lab">
+              Scroll to explore <span aria-hidden="true">↓</span>
+            </a>
+          </div>
+        </section>
 
-          <ScrollReveal className="hero-specimen" delay={100}>
-            <p className="specimen-kicker">Austin, TX // 11 featured systems</p>
-            <div className="specimen-stack" aria-hidden="true">
-              <span>BUILD</span>
-              <span>MEASURE</span>
-              <span>EXPLAIN</span>
-              <span>SHIP</span>
+        <section className="lab-section" id="lab" aria-labelledby="lab-title">
+          <div className="page-width">
+            <ScrollReveal className="section-heading lab-heading">
+              <div>
+                <h2 id="lab-title">
+                  Kettle Moraine
+                  <br />
+                  <em>Research Labs.</em>
+                </h2>
+              </div>
+              <div className="section-intro">
+                <p>
+                  A home for the bigger builds. Hardware, voice tools, and
+                  inference services, with each product’s progress out in the
+                  open.
+                </p>
+                <a className="text-link" href={LAB_URL}>
+                  Visit the lab <Arrow />
+                </a>
+              </div>
+            </ScrollReveal>
+            <div className="lab-grid">
+              {LAB_PROJECTS.map((project, index) => (
+                <article
+                  className={`lab-card lab-card-${index}`}
+                  key={project.id}
+                  aria-labelledby={`lab-${project.id}`}
+                >
+                  <a
+                    className="lab-visual"
+                    href={project.href}
+                    aria-label={`Explore ${project.title}`}
+                  >
+                    {project.id === "open-micro" ? (
+                      <Image
+                        src="/projects/open-micro.webp"
+                        alt="Open Micro desktop controller concept with twelve keys, a dial, and illuminated edges"
+                        fill
+                        sizes="(max-width: 600px) 100vw, (max-width: 800px) 50vw, 40vw"
+                      />
+                    ) : project.id === "lavtype" ? (
+                      <div className="voice-art" aria-hidden="true">
+                        <div className="voice-bars">
+                          {Array.from({ length: 29 }, (_, i) => (
+                            <span
+                              key={i}
+                              style={{
+                                height: `${12 + Math.pow(Math.sin(i * 1.7), 2) * (1 - Math.abs(i - 14) / 20) * 74}px`,
+                              }}
+                            />
+                          ))}
+                        </div>
+                        <span className="voice-phrase">
+                          A thought,
+                          <br />
+                          <em>put into words.</em>
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="inference-art" aria-hidden="true">
+                        <svg viewBox="0 0 360 210">
+                          <g fill="none" stroke="currentColor" strokeWidth=".8">
+                            {Array.from({ length: 8 }, (_, i) => (
+                              <ellipse
+                                key={i}
+                                cx="180"
+                                cy="105"
+                                rx="95"
+                                ry={18 + i * 10}
+                                transform={`rotate(${i * 22.5} 180 105)`}
+                              />
+                            ))}
+                          </g>
+                          <circle cx="180" cy="105" r="7" fill="currentColor" />
+                        </svg>
+                      </div>
+                    )}
+                    <span className="visual-arrow" aria-hidden="true">
+                      ↗
+                    </span>
+                  </a>
+                  <h3 id={`lab-${project.id}`}>
+                    <a href={project.href}>{project.title}</a>
+                  </h3>
+                  <p className="lab-status">{project.status}</p>
+                  <p>{project.summary}</p>
+                  <p className="lab-detail">{project.detail}</p>
+                  <a className="text-link" href={project.href}>
+                    {project.linkLabel} <Arrow />
+                  </a>
+                </article>
+              ))}
             </div>
-            <ul className="specimen-list" aria-label="Portfolio focus areas">
-              <li>terminal tools</li>
-              <li>embedded sensors</li>
-              <li>AI harnesses</li>
-              <li>cloud pipelines</li>
-            </ul>
-          </ScrollReveal>
+          </div>
         </section>
 
         <section
+          className="work-section page-width"
           id="work"
-          className="page-section work-section"
           aria-labelledby="work-title"
         >
-          <ScrollReveal className="section-heading" direction="left">
-            <p className="eyebrow">01 // SELECTED WORK</p>
-            <h2 id="work-title">Selected work</h2>
-            <p>
-              Eleven public experiments, cloud dashboards, native utilities,
-              and tools with a bias toward making the system visible.
+          <ScrollReveal className="section-heading">
+            <div>
+              <h2 id="work-title">
+                A few useful things.
+                <br />
+                <em>A few curious ones.</em>
+              </h2>
+            </div>
+            <p className="section-intro">
+              Guess the jellybeans. Fly a quadcopter. Follow a sensor reading
+              from the soil to the cloud. These are better opened than
+              explained.
             </p>
           </ScrollReveal>
           <ProjectGrid projects={FEATURED_PROJECTS} />
         </section>
 
         <section
-          id="teaching"
-          className="page-section teaching-section"
-          aria-labelledby="teaching-title"
+          className="about-section"
+          id="about"
+          aria-labelledby="about-title"
         >
-          <ScrollReveal className="section-heading" direction="left" repeat>
-            <p className="eyebrow">02 // TEACHING SURFACE</p>
-            <h2 id="teaching-title">Teaching through interfaces</h2>
-            <p>
-              The math and systems projects are framed as developer work, but
-              they also use the browser as a teaching surface: users can guess,
-              perturb, audit, fly, and inspect instead of just reading.
-            </p>
-          </ScrollReveal>
-
-          <div className="teaching-grid">
-            {teachingCards.map((card, index) => (
-              <ScrollReveal
-                className="teaching-card"
-                delay={index * 90}
-                direction={index % 2 === 0 ? "left" : "right"}
-                repeat
-                key={card.title}
+          <div className="page-width about-layout">
+            <ScrollReveal className="about-heading">
+              <h2 id="about-title">
+                Hi, I’m Tom<span className="accent">.</span>
+              </h2>
+              <div className="about-sketch" aria-hidden="true">
+                <span>make</span>
+                <svg viewBox="0 0 120 55">
+                  <path
+                    d="M4 30C30 2 88 2 113 25m-12-19 13 20-24 5M113 42C82 60 28 52 8 36m4 17L7 35l22-1"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+                <span>understand</span>
+              </div>
+            </ScrollReveal>
+            <div className="about-copy">
+              <p className="about-lead">
+                Some days it’s a web app.
+                <br />
+                Some days it’s a circuit board.
+              </p>
+              <p>
+                I’m a developer based in Austin, Texas. My projects range from
+                tiny macOS utilities to cloud-connected gardens and interactive
+                probability experiments.
+              </p>
+              <p>
+                I like being able to follow the whole thing: what the sensor
+                measured, where the data went, and what someone sees on the
+                other end. The browser is also a pretty good place to turn a
+                confusing idea into something you can play with.
+              </p>
+              <a
+                className="text-link"
+                href="https://www.linkedin.com/in/bonness/"
               >
-                <span className="card-index">
-                  {(index + 1).toString().padStart(2, "0")}
-                </span>
-                <h3>{card.title}</h3>
-                <p>{card.body}</p>
-              </ScrollReveal>
-            ))}
-          </div>
-        </section>
-
-        <section
-          id="stack"
-          className="page-section stack-section"
-          aria-labelledby="stack-title"
-        >
-          <ScrollReveal className="section-heading" direction="left" repeat>
-            <p className="eyebrow">03 // STACK</p>
-            <h2 id="stack-title">Stack</h2>
-            <p>
-              Tools used across terminal tools, embedded sensors, AI harnesses,
-              cloud pipelines, and fun math stuff.
-            </p>
-          </ScrollReveal>
-
-          <div className="stack-grid">
-            {stackGroups.map((group, index) => (
-              <ScrollReveal
-                className="stack-card"
-                delay={index * 80}
-                direction={index % 2 === 0 ? "right" : "left"}
-                repeat
-                key={group.title}
-              >
-                <h3>{group.title}</h3>
-                <ul>
-                  {group.skills.map((skill) => (
-                    <li key={skill}>{skill}</li>
-                  ))}
-                </ul>
-              </ScrollReveal>
-            ))}
+                More about me on LinkedIn <Arrow />
+              </a>
+            </div>
+            <div className="discipline-grid">
+              {disciplines.map((discipline) => (
+                <div className="discipline" key={discipline.title}>
+                  <h3>{discipline.title}</h3>
+                  <p>{discipline.description}</p>
+                  <p className="mono discipline-tools">{discipline.tools}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       </main>
 
       <footer
         id="contact"
-        className="page-section site-footer"
+        className="site-footer page-width"
         aria-labelledby="contact-title"
       >
-        <ScrollReveal className="section-heading" direction="left" repeat>
-          <p className="eyebrow">04 // CONTACT</p>
-          <h2 id="contact-title">Contact</h2>
-          <p>
-            Find Tom Bonness on GitHub and LinkedIn. No contact forms, runtime
-            data fetches, or server endpoints on this static portfolio.
-          </p>
-        </ScrollReveal>
-        <ScrollReveal className="footer-links" delay={120} direction="right" repeat>
-          <a href="https://github.com/TomBonness">GitHub</a>
-          <a href="https://www.linkedin.com/in/bonness/">LinkedIn</a>
-        </ScrollReveal>
+        <div className="footer-top">
+          <div>
+            <h2 id="contact-title">
+              What are you
+              <br />
+              <em>working on?</em>
+            </h2>
+          </div>
+          <div className="footer-contact">
+            <p>
+              A project, a question, or something you think I’d find
+              interesting. I’d like to hear it.
+            </p>
+            <a
+              className="button button-primary"
+              href="https://www.linkedin.com/in/bonness/"
+            >
+              Let’s talk on LinkedIn <Arrow />
+            </a>
+            <a className="text-link" href="https://github.com/TomBonness">
+              Find me on GitHub <Arrow />
+            </a>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <a className="wordmark" href="#top">
+            Tom Bonness.
+          </a>
+          <span className="mono">
+            Made with care. And quite a few iterations.
+          </span>
+          <a className="mono back-top" href="#top">
+            Back to top ↑
+          </a>
+        </div>
       </footer>
     </>
   );

@@ -1,71 +1,52 @@
-"use client";
-
-import type { FocusEvent } from "react";
 import type { Project } from "@/data/projects";
+import { ProjectArtwork } from "./ProjectArtwork";
 
-type ProjectCardProps = {
-  project: Project;
-  isActive: boolean;
-  onActiveChange: (projectId: string | null) => void;
-};
+type ProjectCardProps = { project: Project };
 
-export function ProjectCard({
-  project,
-  isActive,
-  onActiveChange,
-}: ProjectCardProps) {
+export function ProjectCard({ project }: ProjectCardProps) {
   const titleId = `${project.id}-title`;
-
-  const clearWhenFocusLeaves = (event: FocusEvent<HTMLElement>) => {
-    const nextTarget = event.relatedTarget;
-
-    if (!(nextTarget instanceof Node)) {
-      onActiveChange(null);
-      return;
-    }
-
-    if (!event.currentTarget.contains(nextTarget)) {
-      onActiveChange(null);
-    }
-  };
+  const destination =
+    project.liveUrl ?? project.repoLinks.find((link) => link.href)?.href;
 
   return (
     <article
       className="project-card"
       aria-labelledby={titleId}
-      data-active={isActive ? "true" : "false"}
       data-category={project.category}
-      data-testid="project-card"
-      onMouseEnter={() => onActiveChange(project.id)}
-      onMouseLeave={() => onActiveChange(null)}
-      onFocus={() => onActiveChange(project.id)}
-      onBlur={clearWhenFocusLeaves}
     >
-      <div className="project-card-header">
-        <span className="project-index">{project.index}</span>
-        <span className="project-category">{project.category}</span>
-      </div>
-
-      <h3 id={titleId}>{project.title}</h3>
+      <a
+        className="project-art-link"
+        href={destination}
+        aria-label={`Explore ${project.title}`}
+      >
+        <ProjectArtwork id={project.id} />
+        <span className="visual-arrow" aria-hidden="true">
+          ↗
+        </span>
+      </a>
+      <h3 id={titleId}>
+        <a href={destination}>{project.title}</a>
+      </h3>
       <p>{project.summary}</p>
-      <p className="teaching-angle">{project.teachingAngle}</p>
-
       <ul className="stack-list" aria-label={`${project.title} stack`}>
         {project.stack.map((item) => (
           <li key={item}>{item}</li>
         ))}
       </ul>
-
       <div className="project-links" aria-label={`${project.title} links`}>
-        {project.liveUrl ? <a href={project.liveUrl}>Live site</a> : null}
-        {project.repoLinks.map((repoLink) =>
-          repoLink.href ? (
-            <a href={repoLink.href} key={repoLink.href}>
-              {repoLink.label}
+        {project.liveUrl && (
+          <a href={project.liveUrl}>
+            Live site <span aria-hidden="true">↗</span>
+          </a>
+        )}
+        {project.repoLinks.map((link) =>
+          link.href ? (
+            <a key={link.href} href={link.href}>
+              {link.label} <span aria-hidden="true">↗</span>
             </a>
           ) : (
-            <span className="repo-badge" key={repoLink.label}>
-              Repo not public yet
+            <span className="repo-badge" key={link.label}>
+              Source not public
             </span>
           ),
         )}

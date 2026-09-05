@@ -12,20 +12,17 @@ export type RepoLink = {
 };
 export type Project = {
   id: string;
-  index: string;
   title: string;
   category: ProjectCategory;
   liveUrl?: string;
   repoLinks: readonly RepoLink[];
   stack: readonly string[];
   summary: string;
-  teachingAngle: string;
 };
 
 export const FEATURED_PROJECTS = [
   {
     id: "jellybean-parliament",
-    index: "01",
     title: "Jellybean Parliament",
     category: "Interactive math",
     liveUrl: "https://jellybeanparliament.com/",
@@ -38,13 +35,10 @@ export const FEATURED_PROJECTS = [
     ],
     stack: ["Next.js", "TypeScript", "Three.js", "AWS Amplify", "DynamoDB"],
     summary:
-      "A weekly wisdom-of-crowds estimation experiment where visitors inspect a generated jar, submit one anonymous guess, and compare the crowd median and mean.",
-    teachingAngle:
-      "Turns noisy individual estimates into an inspectable lesson about median, mean, and collective judgment.",
+      "Guess how many jellybeans are in a generated jar, then see how your estimate compares with the crowd's mean and median.",
   },
   {
     id: "word-finder",
-    index: "02",
     title: "Word Finder",
     category: "Interactive math",
     liveUrl: "https://main.d2dizamdm6z6mx.amplifyapp.com/#activity-heading",
@@ -63,13 +57,10 @@ export const FEATURED_PROJECTS = [
       "Wiktionary corpus",
     ],
     summary:
-      "A public word-rediscovery archive that records first finds and rediscoveries from a finite Roman-script dictionary corpus.",
-    teachingAngle:
-      "Lets the Zipf-like curve emerge from visitor searches instead of forcing the distribution.",
+      "Search a finite dictionary and leave a record of the words you find, whether you're the first visitor or the hundredth.",
   },
   {
     id: "montys-ballroom",
-    index: "03",
     title: "Monty's Ballroom",
     category: "Interactive math",
     liveUrl: "https://main.doypzbqgi42i5.amplifyapp.com/",
@@ -82,13 +73,10 @@ export const FEATURED_PROJECTS = [
     ],
     stack: ["React", "TypeScript", "Vite", "AWS Amplify", "DynamoDB"],
     summary:
-      "A Monty Hall probability explainer that shows why the first pick stays small and the unopened switch door inherits the skipped probability mass.",
-    teachingAngle:
-      "Uses a 1,000-door setup and a scaled visual to make conditional probability feel physical.",
+      "Play Monty Hall with 1,000 doors and see why switching beats staying, even when your first choice feels like the right one.",
   },
   {
     id: "galton-decision-tree",
-    index: "04",
     title: "Galton Decision-Tree",
     category: "Interactive math",
     liveUrl: "https://main.d1widrree9o9pg.amplifyapp.com/",
@@ -108,13 +96,10 @@ export const FEATURED_PROJECTS = [
       "Central Limit Theorem",
     ],
     summary:
-      "A human-in-the-loop Galton board where subjective choices aggregate into a bell curve under the Lindeberg-Feller Central Limit Theorem.",
-    teachingAngle:
-      "Connects personal choices to group-level mathematical certainty without hiding the mechanism.",
+      "Make a series of choices on a human-powered Galton board and see how individual decisions add up to a bell curve.",
   },
   {
     id: "phyllotaxis",
-    index: "05",
     title: "Phyllotaxis",
     category: "Interactive math",
     liveUrl: "https://main.d31pi161pzjs90.amplifyapp.com/",
@@ -127,13 +112,10 @@ export const FEATURED_PROJECTS = [
     ],
     stack: ["Next.js", "TypeScript", "Golden angle", "Visualization"],
     summary:
-      "An interactive sandbox showing why the golden angle around 137.508 degrees produces efficient seed packing.",
-    teachingAngle:
-      "Turns continued fractions, irrationality, and visible packing gaps into one adjustable visual model.",
+      "Adjust the angle between seeds and watch spirals, gaps, and packing patterns emerge, including the familiar golden-angle arrangement found in plants.",
   },
   {
     id: "quadsite",
-    index: "06",
     title: "Quadsite",
     category: "Systems & tools",
     liveUrl: "https://main.d3taplnh1srb2x.amplifyapp.com/",
@@ -153,13 +135,10 @@ export const FEATURED_PROJECTS = [
       "FPV simulation",
     ],
     summary:
-      "A grid-aligned FPV quadcopter simulator with keyboard/gamepad controls, rate curves, telemetry, and calibration panels.",
-    teachingAngle:
-      "Makes low-latency flight control parameters visible instead of burying them in a settings menu.",
+      "Fly an FPV quadcopter with a keyboard or gamepad, then adjust rate curves and calibration while keeping an eye on the flight telemetry.",
   },
   {
     id: "benfords-ledger",
-    index: "07",
     title: "Benford's Ledger",
     category: "Interactive math",
     liveUrl: "https://main.d3g5iw52cz2dgy.amplifyapp.com/",
@@ -169,21 +148,12 @@ export const FEATURED_PROJECTS = [
         status: "unverified",
       },
     ],
-    stack: [
-      "Next.js",
-      "React",
-      "SVG",
-      "Benford's Law",
-      "Forensic statistics",
-    ],
+    stack: ["Next.js", "React", "SVG", "Benford's Law", "Forensic statistics"],
     summary:
-      "A white-collar crime simulator where visitors alter ledger rows and try to keep first-digit frequencies inside a Benford chi-square audit threshold.",
-    teachingAngle:
-      "Lets fraud detection fail or pass in front of the user instead of describing Benford's Law abstractly.",
+      "Alter a ledger and try to slip past a statistical audit. Each change shifts the first-digit frequencies that Benford's Law helps examine.",
   },
   {
     id: "ompkickbacks",
-    index: "08",
     title: "OmpKickbacks",
     category: "Systems & tools",
     liveUrl: "https://main.d1reuioo6kclr4.amplifyapp.com/",
@@ -195,13 +165,10 @@ export const FEATURED_PROJECTS = [
     ],
     stack: ["Terminal agents", "CLI", "Ad ledger", "Privacy constraints"],
     summary:
-      "A sponsored wait-state product for terminal agents where ads render only while CLI work is pending.",
-    teachingAngle:
-      "Explains a developer-tool monetization system through install, wrap, paid-impression, and privacy-ledger steps.",
+      "A terminal-agent tool that shows sponsored messages only while CLI work is pending, with an ad ledger and explicit privacy constraints.",
   },
   {
     id: "chipguard",
-    index: "09",
     title: "ChipGuard",
     category: "Cloud & data",
     liveUrl: "https://chipguardai.com/",
@@ -223,13 +190,10 @@ export const FEATURED_PROJECTS = [
       "Drift detection",
     ],
     summary:
-      "A semiconductor defect prediction dashboard for UCI SECOM wafer fabrication data with API-backed prediction, drift, and history views.",
-    teachingAngle:
-      "Shows model confidence, pass/fail rates, and drift as operational signals instead of hiding them behind a single prediction.",
+      "Explore semiconductor defect predictions from the SECOM dataset, with dashboard views for model confidence, pass/fail rates, drift, and prediction history.",
   },
   {
     id: "cloudsprouts",
-    index: "10",
     title: "CloudSprouts",
     category: "Cloud & data",
     liveUrl: "https://www.cloudsprouts.com/",
@@ -258,13 +222,10 @@ export const FEATURED_PROJECTS = [
       "Amplify",
     ],
     summary:
-      "A full-stack garden sensor pipeline from ESP32 firmware through AWS IoT Core and DynamoDB to a responsive real-time dashboard.",
-    teachingAngle:
-      "Makes the embedded-to-cloud path legible from physical sensor readings to frontend charts.",
+      "Follow garden sensor readings from an ESP32 through AWS IoT Core and DynamoDB to a live dashboard, connecting firmware, cloud services, and charts.",
   },
   {
     id: "dontswitchmics",
-    index: "11",
     title: "Don't Switch Mics",
     category: "Systems & tools",
     repoLinks: [
@@ -284,8 +245,53 @@ export const FEATURED_PROJECTS = [
       "CLI",
     ],
     summary:
-      "A tiny macOS menu bar utility that watches the system default input device and restores the user-selected microphone when macOS or conferencing apps switch away.",
-    teachingAngle:
-      "Makes CoreAudio device identity, persistence, and one-shot enforcement legible through a menu bar app and deterministic CLI checks.",
+      "Choose your microphone once. This macOS menu bar utility restores it when the system or a conferencing app switches to another input.",
   },
 ] satisfies readonly Project[];
+
+export const LAB_URL = "https://main.d1weoyfvphogxs.amplifyapp.com/";
+
+export type LabProject = {
+  id: string;
+  title: string;
+  summary: string;
+  detail: string;
+  status: string;
+  href: string;
+  linkLabel: string;
+};
+
+export const LAB_PROJECTS = [
+  {
+    id: "open-micro",
+    title: "Open Micro",
+    summary:
+      "A desktop controller concept for repeated actions: twelve keys, a dial, and touch, with planned lighting to show when background work needs your attention.",
+    detail:
+      "ZMK firmware and a local Rust bridge. Source available; hardware not ready to build.",
+    status: "Concept in development",
+    href: `${LAB_URL}products/open-micro`,
+    linkLabel: "Explore the concept",
+  },
+  {
+    id: "lavtype",
+    title: "Lavtype",
+    summary:
+      "Hold a shortcut, speak, and release to type into the focused app. Speech recognition runs on your computer, without a cloud service or transcript history.",
+    detail:
+      "macOS 13+ and X11 Linux. Local Parakeet or supported on-device Apple Speech; MIT licensed.",
+    status: "Available to download",
+    href: `${LAB_URL}products/lavtype`,
+    linkLabel: "Explore Lavtype",
+  },
+  {
+    id: "inference",
+    title: "1,000 TPS",
+    summary:
+      "Hosted GLM-5.3-Flash inference in development, aiming for 1,000 tokens per second. The access list is for invitations and launch updates, not immediate API access.",
+    detail: "1,000 TPS is a target, not a measured serving result.",
+    status: "In development · access list",
+    href: `${LAB_URL}products/1000-tps`,
+    linkLabel: "Explore the API plan",
+  },
+] satisfies readonly LabProject[];
