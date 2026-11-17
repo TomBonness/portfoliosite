@@ -1,4 +1,4 @@
-import type { Project, ProjectLink, Readout } from "@/data/projects";
+import type { ProjectLink, Readout } from "@/data/projects";
 import { Icon } from "./Icon";
 
 /** The signature of the site: one measured figure per project, in mono with its unit. */
@@ -11,7 +11,7 @@ export function ProjectReadout({ readout }: { readout: Readout }) {
   );
 }
 
-/** Outbound links for a project, or its note when it has none to offer. */
+/** A project's outbound links, or its note when it has none to offer. */
 export function ProjectLinks({
   title,
   links,
@@ -22,11 +22,11 @@ export function ProjectLinks({
   note?: string;
 }) {
   if (links.length === 0) {
-    return note ? <p className="project-note">{note}</p> : null;
+    return note ? <p className="note">{note}</p> : null;
   }
 
   return (
-    <ul className="project-links">
+    <ul className="links">
       {links.map((link) => (
         <li key={link.href}>
           <a className="link" href={link.href}>
@@ -40,16 +40,22 @@ export function ProjectLinks({
   );
 }
 
-export function ProjectDetails({ project }: { project: Project }) {
+/** The longer explanation, closed until asked for. Its marker is drawn in CSS. */
+export function ProjectDetails({
+  title,
+  details,
+}: {
+  title: string;
+  details: readonly string[];
+}) {
   return (
     <details className="details">
       <summary>
         How it works
-        <span className="sr-only">: {project.title}</span>
-        <Icon name="chevron-down" />
+        <span className="sr-only">: {title}</span>
       </summary>
       <ul>
-        {project.details.map((detail) => (
+        {details.map((detail) => (
           <li key={detail}>{detail}</li>
         ))}
       </ul>

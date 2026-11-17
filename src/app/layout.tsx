@@ -33,13 +33,15 @@ export const metadata: Metadata = {
     description,
   },
   twitter: { card: "summary_large_image", title, description },
+  // Opts the page in to the operating system's text size on browsers that support it.
+  other: { "text-scale": "scale" },
 };
 
 export const viewport: Viewport = {
   colorScheme: "light dark",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7f4ee" },
-    { media: "(prefers-color-scheme: dark)", color: "#161513" },
+    { media: "(prefers-color-scheme: light)", color: "#fbfaf7" },
+    { media: "(prefers-color-scheme: dark)", color: "#110f0d" },
   ],
 };
 

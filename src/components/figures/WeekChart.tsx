@@ -4,15 +4,15 @@ import { WEEK } from "@/data/projects";
 /** Top of the chart's scale, in tokens per second. */
 const SCALE = 1000;
 
-/** One week of releases against the same benchmark: bars on wide screens, rows on narrow ones. */
+/** One week of releases against the same benchmark: columns with room, rows without. */
 export function WeekChart() {
   return (
-    <figure className="visual">
+    <figure className="media">
       <div className="week">
-        <div className="week-head">
+        <p className="week-head">
           <span>One week on a fixed benchmark</span>
           <span>tok/s</span>
-        </div>
+        </p>
         <ol>
           {WEEK.map((point) => (
             <li

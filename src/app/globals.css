@@ -1,944 +1,1621 @@
 /*
- * Spacing sits on a 4px grid. Type uses seven sizes (12, 14, 16, 20, 28, 40,
- * 56) and two weights (400, 500). One accent, used only inside the visuals.
+ * Sizes are in rem on a quarter-rem grid, so the page follows the reader's text
+ * size. Type uses seven steps (0.75, 0.875, 1, 1.25, 1.75, 2.5 and one fluid
+ * display size) and two weights (400, 500). Each chapter owns one color, and
+ * color appears only where a chapter shows its work.
  */
 
-:root {
-  color-scheme: light dark;
+@layer base, layout, components, figures;
 
-  /* A warm neutral ramp: paper and ink. */
-  --page: #f7f4ee;
-  --card: #fdfbf7;
-  --raised: #efe9df;
-  --bar: #d9d2c6;
-  --text: #1f1b16;
-  --text-2: #5e554a;
-  --text-3: #746b5f;
-  --hairline: rgb(31 27 22 / 10%);
-  --underline: rgb(31 27 22 / 32%);
-  --accent: #b5431f;
-  --positive: #16a34a;
-  --shadow: 0 8px 24px rgb(0 0 0 / 6%);
-
-  /* The bench: the dark screen the race runs on, in either theme. */
-  --bench: #1c1a18;
-  --bench-text: #efe9de;
-  --bench-text-2: #aaa398;
-  --bench-hairline: rgb(239 233 222 / 10%);
-  --bench-accent: #f08357;
-
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --gutter: 24px;
-  --header: 56px;
-}
-
-@media (min-width: 640px) {
+@layer base {
   :root {
-    --gutter: 32px;
+    color-scheme: light dark;
+
+    /* Neutrals: warm paper and ink. Raw values, so one scheme can be asked for by name. */
+    --page-light: oklch(0.985 0.004 85);
+    --page-dark: oklch(0.17 0.006 75);
+    --card-light: oklch(1 0 0);
+    --card-dark: oklch(0.215 0.007 75);
+    --raised-light: oklch(0.955 0.008 85);
+    --raised-dark: oklch(0.255 0.008 75);
+    --text-light: oklch(0.215 0.012 75);
+    --text-dark: oklch(0.945 0.008 85);
+    --text-2-light: oklch(0.43 0.014 75);
+    --text-2-dark: oklch(0.75 0.012 85);
+    --text-3-light: oklch(0.52 0.014 75);
+    --text-3-dark: oklch(0.66 0.012 85);
+    --line-light: oklch(0.215 0.012 75 / 12%);
+    --line-dark: oklch(0.945 0.008 85 / 14%);
+    --shadow-light:
+      0 1px 2px oklch(0.215 0.012 75 / 8%), 0 12px 32px oklch(0.215 0.012 75 / 10%);
+    --shadow-dark: 0 1px 2px oklch(0 0 0 / 30%), 0 12px 32px oklch(0 0 0 / 35%);
+
+    /*
+     * Chapter colors. Each has four roles: tint (the stage a picture sits on),
+     * soft (a second surface), vivid (marks and large type, 3:1 or better on
+     * the tint) and ink (text on the tint, 7:1 or better).
+     */
+    --run-tint-light: oklch(0.93 0.05 155);
+    --run-tint-dark: oklch(0.27 0.042 155);
+    --run-soft-light: oklch(0.87 0.085 155);
+    --run-soft-dark: oklch(0.36 0.06 155);
+    --run-vivid-light: oklch(0.58 0.142 155);
+    --run-vivid-dark: oklch(0.76 0.14 155);
+    --run-ink-light: oklch(0.37 0.09 155);
+    --run-ink-dark: oklch(0.89 0.065 155);
+
+    --fast-tint-light: oklch(0.93 0.036 40);
+    --fast-tint-dark: oklch(0.27 0.045 40);
+    --fast-soft-light: oklch(0.87 0.071 40);
+    --fast-soft-dark: oklch(0.36 0.065 40);
+    --fast-vivid-light: oklch(0.62 0.19 40);
+    --fast-vivid-dark: oklch(0.74 0.16 40);
+    --fast-ink-light: oklch(0.37 0.1 40);
+    --fast-ink-dark: oklch(0.89 0.059 40);
+
+    --shipped-tint-light: oklch(0.93 0.032 258);
+    --shipped-tint-dark: oklch(0.27 0.042 258);
+    --shipped-soft-light: oklch(0.87 0.063 258);
+    --shipped-soft-dark: oklch(0.36 0.06 258);
+    --shipped-vivid-light: oklch(0.58 0.17 258);
+    --shipped-vivid-dark: oklch(0.76 0.122 258);
+    --shipped-ink-light: oklch(0.37 0.095 258);
+    --shipped-ink-dark: oklch(0.89 0.052 258);
+
+    --page: var(--page-light);
+    --card: var(--card-light);
+    --raised: var(--raised-light);
+    --text: var(--text-light);
+    --text-2: var(--text-2-light);
+    --text-3: var(--text-3-light);
+    --line: var(--line-light);
+    --shadow: var(--shadow-light);
+    --run-tint: var(--run-tint-light);
+    --run-soft: var(--run-soft-light);
+    --run-vivid: var(--run-vivid-light);
+    --run-ink: var(--run-ink-light);
+    --fast-tint: var(--fast-tint-light);
+    --fast-soft: var(--fast-soft-light);
+    --fast-vivid: var(--fast-vivid-light);
+    --fast-ink: var(--fast-ink-light);
+    --shipped-tint: var(--shipped-tint-light);
+    --shipped-soft: var(--shipped-soft-light);
+    --shipped-vivid: var(--shipped-vivid-light);
+    --shipped-ink: var(--shipped-ink-light);
+
+    @media (prefers-color-scheme: dark) {
+      --page: var(--page-dark);
+      --card: var(--card-dark);
+      --raised: var(--raised-dark);
+      --text: var(--text-dark);
+      --text-2: var(--text-2-dark);
+      --text-3: var(--text-3-dark);
+      --line: var(--line-dark);
+      --shadow: var(--shadow-dark);
+      --run-tint: var(--run-tint-dark);
+      --run-soft: var(--run-soft-dark);
+      --run-vivid: var(--run-vivid-dark);
+      --run-ink: var(--run-ink-dark);
+      --fast-tint: var(--fast-tint-dark);
+      --fast-soft: var(--fast-soft-dark);
+      --fast-vivid: var(--fast-vivid-dark);
+      --fast-ink: var(--fast-ink-dark);
+      --shipped-tint: var(--shipped-tint-dark);
+      --shipped-soft: var(--shipped-soft-dark);
+      --shipped-vivid: var(--shipped-vivid-dark);
+      --shipped-ink: var(--shipped-ink-dark);
+    }
+
+    --mono: var(--font-mono), ui-monospace, monospace;
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --radius-s: 0.5rem;
+    --radius-m: 0.75rem;
+    --radius-l: 1.25rem;
+    --header: 3.5rem;
+    --gutter: 1.5rem;
+    --icon-chevron-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.25' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+
+    @media (width >= 40em) {
+      --gutter: 2rem;
+    }
+
+    @media (width >= 64em) {
+      --gutter: 3rem;
+    }
   }
-}
 
-@media (min-width: 1024px) {
-  :root {
-    --gutter: 48px;
+  /* The root scroller remembers which way it last moved, for the header below. */
+  html {
+    container-type: scroll-state;
+    background: var(--page);
+    scroll-padding-block-start: calc(var(--header) + 1.5rem);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+
+    @media (prefers-reduced-motion: no-preference) {
+      scroll-behavior: smooth;
+    }
   }
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --page: #161513;
-    --card: #1c1a18;
-    --raised: #262421;
-    --bar: #3a3631;
-    --text: #efe9de;
-    --text-2: #aaa398;
-    --text-3: #8a847a;
-    --hairline: rgb(239 233 222 / 8%);
-    --underline: rgb(239 233 222 / 32%);
-    --accent: #f08357;
-    --positive: #4cc38a;
-    --shadow: none;
-    --bench: #12110f;
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--text);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+    -webkit-font-smoothing: antialiased;
   }
-}
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-html {
-  background: var(--page);
-  scroll-behavior: smooth;
-  scroll-padding-top: calc(var(--header) + 24px);
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-}
-body {
-  margin: 0;
-  background: var(--page);
-  color: var(--text);
-  font-family: var(--font-sans), system-ui, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-variant-numeric: tabular-nums;
-  -webkit-font-smoothing: antialiased;
-}
-h1,
-h2,
-h3,
-p,
-ul,
-ol,
-dl,
-dd,
-figure,
-pre {
-  margin: 0;
-}
-ul,
-ol {
-  padding: 0;
-  list-style: none;
-}
-h1,
-h2,
-h3 {
-  font-weight: 500;
-  text-wrap: balance;
-}
-h2 {
-  font-size: 40px;
-  line-height: 44px;
-  letter-spacing: -0.02em;
-}
-p,
-li,
-dd,
-figcaption {
-  text-wrap: pretty;
-}
-a {
-  color: inherit;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-}
-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
-code {
-  font-family: var(--font-mono), ui-monospace, monospace;
-}
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
-  border-radius: 4px;
-}
-
-.wrap {
-  width: min(100%, calc(1200px + 2 * var(--gutter)));
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-.icon {
-  flex: none;
-  width: 16px;
-  height: 16px;
-}
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
-}
-.skip-link {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 20;
-  padding: 12px 16px;
-  border-radius: 8px;
-  background: var(--text);
-  color: var(--page);
-  transform: translateY(-200%);
-}
-.skip-link:focus {
-  transform: none;
-}
-
-/* Controls */
-.button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  height: 44px;
-  padding-inline: 20px;
-  border: 1px solid var(--hairline);
-  border-radius: 8px;
-  background: var(--card);
-  color: var(--text);
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-  transition:
-    background-color 160ms var(--ease),
-    transform 160ms var(--ease);
-}
-.button:hover {
-  background: var(--raised);
-}
-.button:active {
-  transform: scale(0.98);
-}
-.button-primary {
-  border-color: transparent;
-  background: var(--text);
-  color: var(--page);
-}
-.button-primary:hover {
-  background: color-mix(in srgb, var(--text) 84%, var(--page));
-}
-.button-small {
-  height: 36px;
-  padding-inline: 16px;
-}
-.link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-  text-decoration: underline;
-  text-decoration-color: var(--underline);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-  transition: text-decoration-color 160ms var(--ease);
-}
-.link:hover {
-  text-decoration-color: currentColor;
-}
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 32px;
-}
-
-/* Header */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  border-bottom: 1px solid var(--hairline);
-  background: var(--page);
-}
-.header-inner {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  height: var(--header);
-}
-.wordmark {
-  margin-right: auto;
-  font-weight: 500;
-}
-.site-nav {
-  display: flex;
-  gap: 24px;
-}
-.site-nav a,
-.availability {
-  font-size: 14px;
-  line-height: 20px;
-}
-.site-nav a {
-  color: var(--text-2);
-  transition: color 160ms var(--ease);
-}
-.site-nav a:hover {
-  color: var(--text);
-}
-.availability {
-  color: var(--text-3);
-}
-
-/* Hero: copy on one half, the race on the other. */
-.hero {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: 24px;
-  align-items: center;
-  min-height: calc(100vh - var(--header));
-  min-height: calc(100svh - var(--header));
-  padding-block: 64px;
-}
-.hero-copy,
-.hero-visual {
-  grid-column: span 6;
-}
-.hero h1 {
-  font-size: 56px;
-  line-height: 60px;
-  letter-spacing: -0.03em;
-}
-.lede {
-  max-width: 36rem;
-  margin-top: 24px;
-  color: var(--text-2);
-  font-size: 20px;
-  line-height: 28px;
-}
-
-/* The race */
-.race figcaption,
-.visual figcaption {
-  max-width: 36rem;
-  margin-top: 12px;
-  color: var(--text-3);
-  font-size: 14px;
-  line-height: 20px;
-}
-.bench {
-  padding: 24px;
-  border: 1px solid var(--bench-hairline);
-  border-radius: 16px;
-  background: var(--bench);
-  color: var(--bench-text);
-  box-shadow: var(--shadow);
-}
-.bench-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  height: 32px;
-  color: var(--bench-text-2);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 12px;
-  line-height: 16px;
-}
-.bench-file {
-  margin-right: auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.bench-clock,
-.bench-replay {
-  flex: none;
-}
-.bench-clock {
-  white-space: nowrap;
-}
-.bench-replay {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 1px solid var(--bench-hairline);
-  border-radius: 8px;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-  transition:
-    background-color 160ms var(--ease),
-    color 160ms var(--ease),
-    opacity 160ms var(--ease);
-}
-.bench-replay:hover:enabled {
-  background: var(--bench-hairline);
-  color: var(--bench-text);
-}
-.bench-replay:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-.bench-replay:focus-visible {
-  outline-color: var(--bench-accent);
-}
-.lanes {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 24px;
-  margin-top: 16px;
-}
-.lane-head {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  font-size: 14px;
-  line-height: 20px;
-}
-.lane-rate {
-  color: var(--bench-text-2);
-  font-family: var(--font-mono), ui-monospace, monospace;
-}
-.lane-tail {
-  height: 60px;
-  margin-top: 8px;
-  overflow: hidden;
-  color: var(--bench-text-2);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 12px;
-  line-height: 20px;
-  white-space: pre;
-}
-.lane-cursor {
-  display: inline-block;
-  width: 8px;
-  height: 12px;
-  vertical-align: -1px;
-  background: currentColor;
-}
-.lane-bar {
-  height: 4px;
-  margin-top: 12px;
-  overflow: hidden;
-  border-radius: 2px;
-  background: var(--bench-hairline);
-}
-.lane-bar span {
-  display: block;
-  height: 100%;
-  background: var(--bench-text-2);
-  transform-origin: left;
-}
-.is-lead .lane-rate {
-  color: var(--bench-accent);
-}
-.is-lead .lane-tail {
-  color: var(--bench-text);
-}
-.is-lead .lane-bar span {
-  background: var(--bench-accent);
-}
-
-/* Chapters */
-.chapter {
-  padding-block: 96px;
-  border-top: 1px solid var(--hairline);
-}
-.chapter-head p {
-  max-width: 36rem;
-  margin-top: 12px;
-  color: var(--text-2);
-  font-size: 20px;
-  line-height: 28px;
-}
-
-/* A chapter's first project, beside the chapter's one visual. */
-.feature {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 40px 24px;
-  /* Top-aligned, so opening "How it works" never moves the visual. */
-  align-items: start;
-  margin-top: 48px;
-}
-.feature-copy {
-  grid-column: 1 / span 5;
-}
-.feature-visual {
-  grid-column: 7 / span 6;
-}
-.feature.is-flipped .feature-copy {
-  grid-row: 1;
-  grid-column: 8 / span 5;
-}
-.feature.is-flipped .feature-visual {
-  grid-row: 1;
-  grid-column: 1 / span 6;
-}
-.feature.is-stacked .feature-copy,
-.feature.is-stacked .feature-visual {
-  grid-column: 1 / -1;
-}
-@media (min-width: 1024px) {
-  /* Above a wide visual the copy runs in two columns, so the visual comes sooner. */
-  .feature.is-stacked .feature-copy {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: 24px;
-    align-items: start;
+  :where(h1, h2, h3, p, ul, ol, dl, dd, figure, pre) {
+    margin: 0;
   }
-  .feature.is-stacked .feature-intro {
-    grid-column: 1 / span 6;
+
+  :where(ul, ol) {
+    padding: 0;
+    list-style: none;
   }
-  .feature.is-stacked .feature-facts {
-    grid-column: 8 / span 5;
+
+  :where(h1, h2, h3) {
+    font-weight: 500;
+    text-wrap: balance;
   }
-  .feature.is-stacked .readout {
-    margin-top: 0;
+
+  :where(p, li, dd, figcaption) {
+    text-wrap: pretty;
   }
-}
-.feature h3 {
-  font-size: 28px;
-  line-height: 32px;
-}
-.feature-summary {
-  margin-top: 12px;
-  color: var(--text-2);
-  font-size: 20px;
-  line-height: 28px;
-}
-.feature .readout {
-  margin-top: 24px;
-}
-.feature .stack,
-.feature .project-links,
-.feature .project-note {
-  margin-top: 16px;
-}
 
-/* Shared project parts */
-.readout {
-  display: grid;
-  gap: 4px;
-}
-.readout-value {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 28px;
-  line-height: 32px;
-  font-weight: 500;
-}
-.readout-label,
-.project-note {
-  color: var(--text-3);
-  font-size: 14px;
-  line-height: 20px;
-}
-.stack {
-  color: var(--text-3);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 12px;
-  line-height: 16px;
-}
-.project-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 24px;
-}
-.details {
-  margin-top: 12px;
-}
-.details summary {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  color: var(--text-2);
-  font-size: 14px;
-  line-height: 20px;
-  list-style: none;
-  cursor: pointer;
-  transition: color 160ms var(--ease);
-}
-.details summary::-webkit-details-marker {
-  display: none;
-}
-.details summary:hover {
-  color: var(--text);
-}
-.details[open] summary .icon {
-  transform: rotate(180deg);
-}
-.details ul {
-  display: grid;
-  gap: 8px;
-  max-width: 36rem;
-  margin-top: 12px;
-  color: var(--text-2);
-}
-.details li {
-  position: relative;
-  padding-left: 16px;
-}
-.details li::before {
-  content: "";
-  position: absolute;
-  top: 10px;
-  left: 0;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--text-3);
-}
-
-/* The rest of a chapter, as an index with aligned columns. */
-.rows {
-  margin-top: 64px;
-  border-top: 1px solid var(--hairline);
-}
-.chapter-head + .rows {
-  margin-top: 48px;
-}
-.row {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: 24px;
-  align-items: start;
-  padding-block: 24px;
-  border-bottom: 1px solid var(--hairline);
-}
-.row:last-child {
-  border-bottom: 0;
-}
-.row h3 {
-  grid-column: 1 / span 3;
-  font-size: 16px;
-  line-height: 24px;
-}
-.row-body {
-  grid-column: 4 / span 5;
-}
-.row-summary {
-  color: var(--text-2);
-}
-.row-body .stack {
-  margin-top: 8px;
-}
-.row > .readout,
-.row > .stack {
-  grid-column: 9 / span 2;
-  text-align: right;
-}
-.row > .stack {
-  padding-top: 4px;
-}
-.row .readout-value {
-  font-size: 20px;
-  line-height: 24px;
-}
-.row > .project-links,
-.row > .project-note {
-  grid-column: 11 / span 2;
-  text-align: right;
-}
-.row > .project-links {
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-/* Visuals */
-.preflight {
-  padding: 24px;
-  border: 1px solid var(--hairline);
-  border-radius: 16px;
-  background: var(--card);
-}
-.preflight-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-}
-.preflight-head span:last-child,
-.preflight code,
-.preflight-foot {
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 400;
-}
-.preflight-head span:last-child {
-  color: var(--text-3);
-}
-.preflight ul {
-  margin-top: 16px;
-}
-.preflight li {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto 16px;
-  align-items: center;
-  column-gap: 16px;
-  height: 44px;
-  border-top: 1px solid var(--hairline);
-  color: var(--text-2);
-  font-size: 14px;
-  line-height: 20px;
-}
-.preflight code {
-  color: var(--text);
-}
-.preflight .icon {
-  color: var(--positive);
-}
-.preflight-foot {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-top: 16px;
-  border-top: 1px solid var(--hairline);
-}
-
-.week-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-}
-.week-head span:last-child,
-.week-date {
-  color: var(--text-3);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 12px;
-  line-height: 16px;
-  font-weight: 400;
-}
-.week ol {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  column-gap: 16px;
-  margin-top: 24px;
-}
-.week-plot {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 8px;
-  height: 240px;
-  border-bottom: 1px solid var(--hairline);
-}
-.week-value {
-  color: var(--text-2);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 14px;
-  line-height: 20px;
-  font-weight: 500;
-}
-.week-bar {
-  height: calc(var(--v) * 200px);
-  border-radius: 4px 4px 0 0;
-  background: var(--bar);
-}
-.week-caption {
-  display: grid;
-  gap: 4px;
-  margin-top: 12px;
-}
-.week-label {
-  color: var(--text-2);
-  font-size: 14px;
-  line-height: 20px;
-}
-.week li:last-child .week-value {
-  color: var(--accent);
-}
-.week li:last-child .week-bar {
-  background: var(--accent);
-}
-
-.shot img {
-  width: 100%;
-  border: 1px solid var(--hairline);
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-}
-
-/* About */
-.about {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: 24px;
-  margin-top: 48px;
-}
-.about-copy {
-  grid-column: 1 / span 5;
-  color: var(--text-2);
-  font-size: 20px;
-  line-height: 28px;
-}
-.about-copy p + p {
-  margin-top: 16px;
-}
-.about-copy .project-links {
-  margin-top: 24px;
-  color: var(--text);
-}
-.toolbox {
-  grid-column: 7 / span 6;
-  border-bottom: 1px solid var(--hairline);
-}
-.toolbox div {
-  display: grid;
-  grid-template-columns: 144px minmax(0, 1fr);
-  column-gap: 24px;
-  padding-block: 16px;
-  border-top: 1px solid var(--hairline);
-}
-.toolbox dt {
-  color: var(--text-3);
-  font-size: 14px;
-}
-
-/* Contact and footer */
-.contact h2 {
-  max-width: 20ch;
-}
-.contact p {
-  margin-top: 16px;
-  color: var(--text-2);
-  font-size: 20px;
-  line-height: 28px;
-}
-.footer-bottom {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 8px 24px;
-  padding-block: 24px 32px;
-  border-top: 1px solid var(--hairline);
-  color: var(--text-3);
-  font-size: 14px;
-  line-height: 20px;
-}
-
-@media (max-width: 1023px) {
-  h2 {
-    font-size: 28px;
-    line-height: 32px;
-    letter-spacing: 0;
+  :where(a) {
+    color: inherit;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
   }
-  .wide-only {
-    display: none;
-  }
-  .hero {
+
+  :where(img, svg) {
     display: block;
-    min-height: 0;
-    padding-block: 48px 64px;
+    max-inline-size: 100%;
+    block-size: auto;
   }
-  .hero h1 {
-    font-size: 40px;
-    line-height: 44px;
+
+  /*
+   * The wrapper is the box that gets placed and sized, and the image fills
+   * it. Its <source> children must not turn into layout items.
+   */
+  :where(picture) {
+    display: block;
+
+    > img {
+      inline-size: 100%;
+    }
+  }
+
+  :where(code, pre) {
+    font-family: var(--mono);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 3px;
+  }
+
+  /* The skip link's target takes focus without being a control. */
+  h1:focus {
+    outline: none;
+  }
+
+  ::selection {
+    background: var(--run-soft);
+    color: var(--text);
+  }
+
+  .icon {
+    flex: none;
+    inline-size: 1rem;
+    block-size: 1rem;
+  }
+
+  .sr-only:not(:focus-within, :active) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: clip;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .skip-link {
+    position: fixed;
+    inset-block-start: 0.5rem;
+    inset-inline-start: 0.5rem;
+    z-index: 20;
+    padding: 0.5rem 0.875rem;
+    border-radius: var(--radius-s);
+    background: var(--text);
+    color: var(--page);
+    font-size: 0.875rem;
+    font-weight: 500;
+
+    &:not(:focus-visible) {
+      translate: 0 -200%;
+    }
+  }
+
+  /* One class per chapter hands its four colors to whatever sits inside. */
+  .hue-run {
+    --tint: var(--run-tint);
+    --soft: var(--run-soft);
+    --vivid: var(--run-vivid);
+    --ink: var(--run-ink);
+  }
+
+  .hue-fast {
+    --tint: var(--fast-tint);
+    --soft: var(--fast-soft);
+    --vivid: var(--fast-vivid);
+    --ink: var(--fast-ink);
+  }
+
+  .hue-shipped {
+    --tint: var(--shipped-tint);
+    --soft: var(--shipped-soft);
+    --vivid: var(--shipped-vivid);
+    --ink: var(--shipped-ink);
+  }
+}
+
+@layer layout {
+  .wrap {
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: 78rem;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* Header: one compact row that steps aside while the reader scrolls down. */
+  .site-header {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 10;
+    border-block-end: 1px solid var(--line);
+    background: var(--page);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: translate 0.3s var(--ease);
+    }
+  }
+
+  @container scroll-state((scrolled: bottom) and (scrollable: top)) {
+    .site-header:not(:focus-within) {
+      translate: 0 -100%;
+    }
+  }
+
+  /* One row. It wraps to two only when the text is very large or the screen very narrow. */
+  .header-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 1.5rem;
+    min-block-size: var(--header);
+    padding-block: 0.5rem;
+  }
+
+  .wordmark {
+    margin-inline-end: auto;
+    font-weight: 500;
+  }
+
+  .availability {
+    color: var(--text-2);
+    font-size: 0.875rem;
+
+    @media (width < 40em) {
+      display: none;
+    }
+  }
+
+  .site-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 1.5rem;
+  }
+
+  .site-nav a:not(.button) {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: 1.75rem;
+    color: var(--text-2);
+    font-size: 0.875rem;
+    transition: color 0.15s;
+
+    &:hover {
+      color: var(--text);
+    }
+  }
+
+  /* Intro: the claim, then the three chapters as a colored index. */
+  .intro {
+    padding-block-start: clamp(3rem, 1.5rem + 6vw, 6.5rem);
+
+    h1 {
+      font-size: clamp(2.25rem, 1.1rem + 5.2vw, 4.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+  }
+
+  .word-fast {
+    color: var(--fast-vivid);
+  }
+
+  /* Three short words that read as one thing: kept on one line when a line can hold them. */
+  .word-run {
+    color: var(--run-vivid);
+
+    @media (width >= 30em) {
+      white-space: nowrap;
+    }
+  }
+
+  .lede {
+    max-inline-size: 48ch;
+    margin-block-start: 1.5rem;
+    color: var(--text-2);
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block-start: 2rem;
+  }
+
+  .index {
+    margin-block-start: clamp(3rem, 2rem + 4vw, 5rem);
+
+    /* As wide as the chapters are long: four, two and three projects. */
+    > ul {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.75rem;
+
+      @media (width >= 56em) {
+        grid-template-columns: minmax(0, 4fr) minmax(0, 2fr) minmax(0, 3fr);
+      }
+    }
+
+    > ul > li {
+      display: grid;
+      align-content: start;
+      padding: 1.25rem 1.5rem 1.5rem;
+      border-radius: var(--radius-l);
+      background: var(--tint);
+    }
+
+    p {
+      color: var(--ink);
+      font-size: 0.875rem;
+    }
+
+    li ul {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+      gap: 0.25rem 1.5rem;
+      margin-block-start: 1.5rem;
+    }
+
+    li li a {
+      display: inline-flex;
+      align-items: center;
+      min-block-size: 1.75rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: underline;
+      text-decoration-color: color-mix(in oklab, var(--ink) 35%, transparent);
+      text-underline-offset: 0.2em;
+      transition: text-decoration-color 0.15s;
+
+      &:hover {
+        text-decoration-color: currentColor;
+      }
+    }
+  }
+
+  .index-chapter {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-self: start;
+    color: var(--ink);
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.2;
     letter-spacing: -0.02em;
+
+    .icon {
+      inline-size: 1.25rem;
+      block-size: 1.25rem;
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition: translate 0.2s var(--ease);
+      }
+    }
+
+    &:hover .icon {
+      translate: 0 0.1875rem;
+    }
   }
-  .hero-visual {
-    margin-top: 48px;
-  }
+
+  /* Chapters. An in-page link lands on the heading, not on the space above it. */
   .chapter {
-    padding-block: 64px;
+    --chapter-pad: clamp(4.5rem, 3rem + 6vw, 8rem);
+
+    padding-block-start: var(--chapter-pad);
+    scroll-margin-block-start: calc(-1 * var(--chapter-pad));
   }
-  .chapter-head p,
-  .feature-summary {
-    font-size: 16px;
-    line-height: 24px;
+
+  .chapter-head {
+    display: grid;
+    gap: 0.75rem;
+    margin-block-end: clamp(2rem, 1.5rem + 2vw, 3rem);
+
+    h2 {
+      color: var(--ink, var(--text));
+      font-size: clamp(1.75rem, 1.25rem + 2.4vw, 2.5rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      max-inline-size: 46ch;
+      color: var(--text-2);
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
   }
-  .feature,
-  .about {
-    display: block;
-    margin-top: 32px;
+
+  .chapter-rows {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(3rem, 2rem + 4vw, 5rem);
   }
-  .feature h3 {
-    font-size: 20px;
-    line-height: 28px;
+
+  /* Two cards share a row when there is room. */
+  .pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 3rem;
+
+    @media (width >= 56em) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: repeat(4, auto);
+      gap: 0 3rem;
+    }
   }
-  .feature-visual,
-  .toolbox {
-    margin-top: 32px;
-  }
-  .rows {
-    margin-top: 48px;
-  }
+
+  /* The small tools: a plain list under the two cards. */
   .row {
-    display: block;
+    display: grid;
+    gap: 0.25rem 2rem;
+    padding-block: 1.25rem;
+    border-block-start: 1px solid var(--line);
+    scroll-margin-block-start: calc(var(--header) + 1.5rem);
+
+    h3 {
+      font-size: 1rem;
+    }
+
+    > p:not(.stack) {
+      color: var(--text-2);
+    }
+
+    @media (width >= 56em) {
+      grid-template-columns: 11rem minmax(0, 1fr) 7rem 5rem;
+      align-items: baseline;
+    }
   }
-  .row-body {
-    margin-top: 4px;
+
+  .about {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.5rem 4rem;
+
+    @media (width >= 56em) {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    }
   }
-  .row > .readout {
+
+  .about-copy {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+
+    p {
+      max-inline-size: 44ch;
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+
+    p + p {
+      color: var(--text-2);
+    }
+
+    .links {
+      margin-block-start: 0.5rem;
+    }
+  }
+
+  .toolbox {
+    display: grid;
+    align-content: start;
+
+    div {
+      display: grid;
+      gap: 0.25rem;
+      padding-block: 1rem;
+      border-block-start: 1px solid var(--line);
+    }
+
+    dt {
+      color: var(--text-3);
+      font-size: 0.875rem;
+    }
+  }
+
+  .site-footer {
+    margin-block-start: clamp(4.5rem, 3rem + 6vw, 8rem);
+  }
+
+  .contact {
+    scroll-margin-block-start: calc(var(--header) + 1.5rem);
+
+    h2 {
+      max-inline-size: 20ch;
+      margin-block-start: 2.5rem;
+      font-size: clamp(1.75rem, 1.25rem + 2.4vw, 2.5rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin-block-start: 1rem;
+      color: var(--text-2);
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
+
+  /* The chapters once more, in the proportions of the index. */
+  .strip {
+    display: grid;
+    grid-template-columns: 4fr 2fr 3fr;
+    gap: 0.25rem;
+
+    span {
+      block-size: 0.5rem;
+      border-radius: 0.25rem;
+      background: var(--vivid);
+    }
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    margin-block-start: 4rem;
+    padding-block: 1.25rem 2rem;
+    border-block-start: 1px solid var(--line);
+    color: var(--text-3);
+    font-size: 0.875rem;
+  }
+}
+
+@layer components {
+  .button {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-block-size: 2.75rem;
+    padding: 0.5rem 1.125rem;
+    border: 1px solid var(--text-3);
+    border-radius: var(--radius-s);
+    font-weight: 500;
+    transition:
+      background-color 0.15s,
+      border-color 0.15s;
+
+    &:hover {
+      border-color: var(--text);
+      background: var(--raised);
+    }
+  }
+
+  .button-primary {
+    border-color: var(--text);
+    background: var(--text);
+    color: var(--page);
+
+    &:hover {
+      border-color: var(--text-2);
+      background: var(--text-2);
+    }
+  }
+
+  .button-small {
+    min-block-size: 2.25rem;
+    padding: 0.25rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+  }
+
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-block-size: 1.75rem;
+    color: var(--text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: var(--text-3);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color 0.15s;
+
+    &:hover {
+      text-decoration-color: currentColor;
+    }
+  }
+
+  .note {
+    display: flex;
+    align-items: center;
+    min-block-size: 1.75rem;
+    color: var(--text-3);
+    font-size: 0.875rem;
+  }
+
+  .stack {
+    color: var(--text-3);
+    font-size: 0.875rem;
+  }
+
+  @media (pointer: coarse) {
+    .link,
+    .note,
+    .site-nav a:not(.button),
+    .index li li a,
+    .details summary {
+      min-block-size: 2.75rem;
+    }
+  }
+
+  /* A project. Regions sit in source order: picture, name, text, links. */
+  .card {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    column-gap: 3rem;
+    align-content: start;
+    scroll-margin-block-start: calc(var(--header) + 1.5rem);
+
+    /* The last track takes up the slack when the picture is taller than the text. */
+    &:has(> .media) {
+      grid-template-rows: auto auto auto 1fr;
+    }
+
+    > * {
+      grid-column: 1 / -1;
+    }
+
+    > h3 {
+      margin-block-start: 1.25rem;
+      font-size: 1.25rem;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+
+    > .card-body {
+      display: grid;
+      gap: 0.75rem;
+      align-content: start;
+      justify-items: start;
+      margin-block-start: 0.5rem;
+
+      > p:first-child {
+        max-inline-size: 60ch;
+        color: var(--text-2);
+      }
+    }
+
+    > footer {
+      display: grid;
+      gap: 0.25rem;
+      align-content: start;
+      justify-items: start;
+      margin-block-start: 0.5rem;
+    }
+  }
+
+  /*
+   * A card with a row to itself is a size container, so its children can ask
+   * how wide it is. With room, the picture moves beside the text: only in
+   * cards that have one.
+   */
+  .chapter-rows > .card {
+    container: card / inline-size;
+  }
+
+  @container card (inline-size >= 52rem) {
+    .card:has(> .media) {
+      > .media {
+        grid-area: 1 / 1 / -1 / 2;
+        align-self: start;
+      }
+
+      > h3 {
+        grid-area: 1 / 2;
+        margin-block-start: 0.75rem;
+        font-size: 1.75rem;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+      }
+
+      > .card-body {
+        grid-area: 2 / 2;
+        gap: 1rem;
+        margin-block-start: 0.75rem;
+      }
+
+      > footer {
+        grid-area: 3 / 2;
+        gap: 0.5rem;
+        margin-block-start: 0.75rem;
+      }
+
+      .readout-value {
+        font-size: 1.75rem;
+        line-height: 1.2;
+      }
+    }
+  }
+
+  /*
+   * Two cards side by side share the row's four tracks instead, so their
+   * pictures, names, text and links line up. A size container can't be a
+   * subgrid, which is why these aren't one. Without subgrid each card keeps
+   * the rows it already had.
+   */
+  @media (width >= 56em) {
+    .pair > .card {
+      grid-row: span 4;
+      grid-template-rows: subgrid;
+    }
+  }
+
+  .readout {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 4px 8px;
-    margin-top: 16px;
-    text-align: left;
+    gap: 0 0.75rem;
   }
-  .row > .stack {
-    margin-top: 8px;
-    padding-top: 0;
-    text-align: left;
+
+  .readout-value {
+    color: var(--ink, var(--text));
+    font-family: var(--mono);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.4;
   }
-  .row > .project-links,
-  .row > .project-note {
-    margin-top: 16px;
-    text-align: left;
+
+  .readout-label {
+    color: var(--text-2);
+    font-size: 0.875rem;
   }
-  .row > .project-links {
-    flex-direction: row;
+
+  /* "How it works": closed until asked for, with the marker beside its label. */
+  .details {
+    justify-self: stretch;
+
+    summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      min-block-size: 1.75rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      list-style: none;
+      cursor: pointer;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &::before {
+        content: "";
+        flex: none;
+        inline-size: 1rem;
+        block-size: 1rem;
+        background-color: currentColor;
+        mask: var(--icon-chevron-down) no-repeat center / contain;
+        rotate: -90deg;
+        forced-color-adjust: none;
+
+        @media (prefers-reduced-motion: no-preference) {
+          transition: rotate 0.2s var(--ease);
+        }
+      }
+    }
+
+    &[open] > summary::before {
+      rotate: 0deg;
+    }
+
+    ul {
+      display: grid;
+      gap: 0.5rem;
+      max-inline-size: 60ch;
+      padding-block: 0.5rem 0.25rem;
+      padding-inline-start: 1.375rem;
+      color: var(--text-2);
+      font-size: 0.875rem;
+      list-style: disc;
+    }
+
+    li::marker {
+      color: var(--vivid, var(--text-3));
+    }
+
+    &::details-content {
+      interpolate-size: allow-keywords;
+      overflow: clip;
+      contain: layout;
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition:
+          block-size 0.3s var(--ease),
+          content-visibility 0.3s,
+          display 0.3s;
+        transition-behavior: allow-discrete;
+      }
+    }
+
+    &:not([open])::details-content {
+      block-size: 0;
+    }
+  }
+}
+
+@layer figures {
+  /*
+   * The stage a project's picture sits on, in its chapter's tint. It is a size
+   * container, so each picture can lay itself out for the room it gets.
+   */
+  .media {
+    container: stage / inline-size;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 1.25rem;
+    place-items: center;
+    min-block-size: 16rem;
+    padding: 1.25rem;
+    border-radius: var(--radius-l);
+    background: var(--tint, var(--raised));
+
+    > figcaption {
+      place-self: end start;
+      max-inline-size: 60ch;
+      color: var(--ink, var(--text-2));
+      font-size: 0.75rem;
+    }
+  }
+
+  @media (width >= 40em) {
+    .media {
+      min-block-size: 24rem;
+      padding: 2rem 2rem 1.25rem;
+    }
+  }
+
+  @container card (inline-size >= 52rem) {
+    .media {
+      min-block-size: 28rem;
+    }
+  }
+
+  /* A white sheet for anything that reads as interface. */
+  .panel {
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: 26rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-m);
+    background: var(--card);
+    box-shadow: var(--shadow);
+  }
+
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block-end: 0.75rem;
+    border-block-end: 1px solid var(--line);
+    color: var(--text-3);
+    font-size: 0.75rem;
+  }
+
+  /* Boot check */
+  .bootcheck {
+    li {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      column-gap: 0.75rem;
+      align-items: center;
+      padding-block: 0.625rem;
+      border-block-end: 1px solid var(--line);
+      font-size: 0.875rem;
+
+      > :first-child {
+        grid-area: 1 / 1;
+      }
+
+      > code {
+        grid-area: 2 / 1;
+        color: var(--text-2);
+        font-size: 0.75rem;
+      }
+
+      > .icon {
+        grid-area: 1 / 2 / span 2;
+        color: var(--vivid);
+      }
+    }
+  }
+
+  @container stage (inline-size >= 26rem) {
+    .bootcheck li {
+      grid-template-columns: 1fr auto auto;
+
+      > code {
+        grid-area: 1 / 2;
+      }
+
+      > .icon {
+        grid-area: 1 / 3;
+      }
+    }
+  }
+
+  .bootcheck-foot {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-block-start: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-s);
+    background: var(--tint);
+    color: var(--ink);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+  }
+
+  /* Pipeline */
+  .pipeline {
+    display: grid;
+    inline-size: 100%;
+    max-inline-size: 22rem;
+
+    li {
+      position: relative;
+      display: grid;
+      grid-template-columns: 2.5rem 1fr;
+      column-gap: 1rem;
+      align-items: center;
+      min-block-size: 2.5rem;
+
+      &:not(:last-child) {
+        padding-block-end: 1.25rem;
+
+        /* The line down to the next step. */
+        &::before {
+          content: "";
+          position: absolute;
+          inset-block: 2.5rem 0;
+          inset-inline-start: calc(1.25rem - 1px);
+          inline-size: 2px;
+          background: var(--vivid);
+        }
+      }
+    }
+  }
+
+  .pipeline-node {
+    display: grid;
+    place-items: center;
+    align-self: start;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    border-radius: 50%;
+    background: var(--vivid);
+    color: var(--card);
+
+    .icon {
+      inline-size: 1.25rem;
+      block-size: 1.25rem;
+    }
+  }
+
+  .pipeline-label {
+    display: block;
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .pipeline-detail {
+    display: block;
+    color: var(--ink);
+    font-size: 0.875rem;
+  }
+
+  /*
+   * Terminal: dark in both schemes, so it names the dark values itself and
+   * tells the browser, for anything it draws inside.
+   */
+  .terminal {
+    color-scheme: dark;
+    box-sizing: border-box;
+    inline-size: 100%;
+    max-inline-size: 30rem;
+    border-radius: var(--radius-m);
+    background: var(--card-dark);
+    box-shadow: var(--shadow);
+    color: var(--text-dark);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    line-height: 1.6;
+
+    pre {
+      padding: 0.75rem 1rem 1rem;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  .terminal-bar {
+    display: flex;
+    gap: 0.375rem;
+    padding: 0.75rem 1rem 0;
+
+    span {
+      inline-size: 0.625rem;
+      block-size: 0.625rem;
+      border-radius: 50%;
+      background: var(--raised-dark);
+    }
+  }
+
+  .terminal-strong {
+    font-weight: 500;
+  }
+
+  .terminal-dim {
+    color: var(--text-2-dark);
+  }
+
+  .terminal-key {
+    color: var(--run-vivid-dark);
+  }
+
+  .terminal-caret {
+    display: inline-block;
+    inline-size: 0.6em;
+    block-size: 1.15em;
+    margin-inline-start: 0.5em;
+    background: var(--text-dark);
+    vertical-align: text-bottom;
+  }
+
+  /* Sources: stacked with one line through the middle, then a bus diagram with room. */
+  .sources {
+    --stub: 1.25rem;
+    --wire: 2px solid var(--vivid);
+
+    display: grid;
+    justify-items: center;
+    inline-size: 100%;
+    max-inline-size: 42rem;
+
+    ul {
+      display: grid;
+      gap: 0.375rem;
+      justify-self: stretch;
+    }
+
+    /* Name, then what it gives. The second drops under the first when squeezed. */
+    li {
+      position: relative;
+      box-sizing: border-box;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 0.75rem;
+      align-items: baseline;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-s);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+  }
+
+  .sources-name {
+    flex: 0 0 5.5rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .sources-detail {
+    flex: 1 1 7rem;
+    color: var(--text-2);
+    font-size: 0.75rem;
+  }
+
+  .sources-node {
+    position: relative;
+    margin-block: var(--stub);
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-s);
+    background: var(--ink);
+    color: var(--page);
+    font-weight: 500;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline-start: calc(50% - 1px);
+      block-size: var(--stub);
+      border-inline-start: var(--wire);
+    }
+
+    &::before {
+      inset-block-end: 100%;
+    }
+
+    &::after {
+      inset-block-start: 100%;
+    }
+  }
+
+  @container stage (inline-size >= 36rem) {
+    .sources {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+
+      li {
+        display: grid;
+
+        /* A stub out to the bus, and this item's stretch of the bus itself. */
+        &::before,
+        &::after {
+          content: "";
+          position: absolute;
+        }
+
+        &::before {
+          inset-block-start: calc(50% - 1px);
+          inline-size: var(--stub);
+          border-block-start: var(--wire);
+        }
+
+        &::after {
+          inset-block: 0 -0.375rem;
+          border-inline-start: var(--wire);
+        }
+
+        &:first-child::after {
+          inset-block-start: calc(50% - 1px);
+        }
+
+        &:last-child::after {
+          inset-block-end: calc(50% - 1px);
+        }
+      }
+    }
+
+    .sources-in {
+      padding-inline-end: calc(var(--stub) * 2);
+
+      li::before {
+        inset-inline-start: 100%;
+      }
+
+      li::after {
+        inset-inline-start: calc(100% + var(--stub) - 1px);
+      }
+    }
+
+    .sources-out {
+      padding-inline-start: calc(var(--stub) * 2);
+
+      li::before {
+        inset-inline-end: 100%;
+      }
+
+      li::after {
+        inset-inline-end: calc(100% + var(--stub) - 1px);
+      }
+    }
+
+    .sources-node {
+      margin: 0;
+      padding: 0.75rem 1.25rem;
+
+      &::before,
+      &::after {
+        inset-block: calc(50% - 1px) auto;
+        inline-size: var(--stub);
+        block-size: auto;
+        border-inline-start: 0;
+        border-block-start: var(--wire);
+      }
+
+      &::before {
+        inset-inline: auto 100%;
+      }
+
+      &::after {
+        inset-inline: 100% auto;
+      }
+    }
+  }
+
+  /* Week chart: rows by default, columns with room. Value, bar, then caption. */
+  .week {
+    inline-size: 100%;
+    max-inline-size: 38rem;
+
+    ol {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    li {
+      display: grid;
+      gap: 0.125rem;
+    }
+  }
+
+  .week-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-block-end: 1.25rem;
+    color: var(--ink);
+    font-size: 0.75rem;
+  }
+
+  .week-plot {
+    display: grid;
+    grid-template-columns: 2.25rem 1fr;
+    gap: 0.75rem;
     align-items: center;
   }
-}
 
-@media (max-width: 767px) {
-  .header-inner {
-    gap: 16px;
-  }
-  .site-nav {
-    gap: 16px;
-  }
-  .availability {
-    display: none;
-  }
-}
-
-@media (max-width: 639px) {
-  .bench,
-  .preflight {
-    padding: 16px;
-  }
-  .week ol {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: 16px;
-  }
-  .week li {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      "caption value"
-      "bar bar";
-    gap: 8px 12px;
-    align-items: end;
-  }
-  .week-plot {
-    display: contents;
-  }
   .week-value {
-    grid-area: value;
+    font-family: var(--mono);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: end;
   }
-  .week-bar {
-    grid-area: bar;
-    width: calc(var(--v) * 100%);
-    height: 8px;
-    border-radius: 4px;
-  }
-  .week-caption {
-    grid-area: caption;
-    margin-top: 0;
-  }
-  .toolbox div {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: 4px;
-  }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
+  .week-bar {
+    inline-size: calc(var(--v) * 100%);
+    block-size: 0.75rem;
+    border-radius: 0.125rem;
+    background: var(--vivid);
   }
-  *,
-  *::before,
-  *::after {
-    transition: none !important;
+
+  .week-caption {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.75rem;
+    padding-inline-start: 3rem;
+    font-size: 0.75rem;
+  }
+
+  .week-date {
+    font-family: var(--mono);
+  }
+
+  .week-label {
+    color: var(--ink);
+  }
+
+  @container stage (inline-size >= 32rem) {
+    .week ol {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-rows: auto auto;
+      gap: 0 0.75rem;
+    }
+
+    /* Each release spans both tracks, so every bar stands on the same line. */
+    .week li {
+      grid-row: span 2;
+      grid-template-rows: subgrid;
+      gap: 0;
+    }
+
+    .week-plot {
+      grid-template-columns: 1fr;
+      gap: 0.375rem;
+      align-self: end;
+    }
+
+    .week-value {
+      text-align: start;
+    }
+
+    .week-bar {
+      inline-size: auto;
+      block-size: calc(var(--v) * 12rem);
+      border-radius: 0.25rem 0.25rem 0 0;
+    }
+
+    .week-caption {
+      display: grid;
+      gap: 0.125rem;
+      align-content: start;
+      padding-block-start: 0.5rem;
+      padding-inline-start: 0;
+      border-block-start: 2px solid var(--ink);
+    }
+  }
+
+  /*
+   * Tiers. Filled squares are on the GPU and hollow ones are not, so the two
+   * differ in shape and not only in color.
+   */
+  .tiers {
+    display: grid;
+    gap: 1.25rem;
+    inline-size: 100%;
+    max-inline-size: 40rem;
+
+    svg {
+      inline-size: 100%;
+      stroke: var(--vivid);
+      stroke-linejoin: round;
+    }
+  }
+
+  .tiers-gpu {
+    fill: var(--vivid);
+    stroke-width: 2;
+  }
+
+  .tiers-rest {
+    fill: none;
+    stroke-width: 1;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+    font-size: 0.75rem;
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
+
+  .swatch {
+    box-sizing: border-box;
+    flex: none;
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+    border: 1px solid var(--vivid);
+    border-radius: 0.125rem;
+  }
+
+  .swatch-gpu {
+    background: var(--vivid);
+  }
+
+  /* Windows: two real screenshots, overlapped like windows on a desk. */
+  .windows {
+    display: grid;
+    inline-size: 100%;
+    max-inline-size: 44rem;
+
+    picture {
+      grid-area: 1 / 1;
+    }
+  }
+
+  .window-back {
+    align-self: start;
+    inline-size: 90%;
+    border-radius: var(--radius-s);
+    box-shadow: var(--shadow);
+    overflow: clip;
+  }
+
+  .window-front {
+    place-self: end;
+    inline-size: 62%;
+    margin-block-start: 30%;
+    filter: drop-shadow(0 0.75rem 1.25rem oklch(0.2 0.03 258 / 28%));
+  }
+
+  /* Dictation */
+  .dictation {
+    display: grid;
+    justify-items: center;
+    inline-size: 100%;
+    max-inline-size: 24rem;
+  }
+
+  .dictation-voice {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    inline-size: 100%;
+
+    svg {
+      flex: 1;
+      min-inline-size: 0;
+      fill: var(--vivid);
+    }
+  }
+
+  .keycap {
+    display: grid;
+    place-items: center;
+    flex: none;
+    inline-size: 3.5rem;
+    block-size: 3.5rem;
+    border-radius: var(--radius-m);
+    background: var(--card);
+    box-shadow:
+      0 0.25rem 0 var(--soft),
+      var(--shadow);
+    color: var(--ink);
+
+    .icon {
+      inline-size: 1.5rem;
+      block-size: 1.5rem;
+    }
+  }
+
+  .dictation-model {
+    position: relative;
+    margin-block: 1.25rem;
+    padding: 0.375rem 0.875rem;
+    border-radius: var(--radius-s);
+    background: var(--ink);
+    color: var(--page);
+    font-size: 0.75rem;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset-inline-start: calc(50% - 1px);
+      block-size: 1.25rem;
+      border-inline-start: 2px solid var(--vivid);
+    }
+
+    &::before {
+      inset-block-end: 100%;
+    }
+
+    &::after {
+      inset-block-start: 100%;
+    }
+  }
+
+  .dictation-field {
+    max-inline-size: none;
+  }
+
+  .dictation-text {
+    padding-block-start: 0.75rem;
+  }
+
+  .dictation-caret {
+    display: inline-block;
+    inline-size: 2px;
+    block-size: 1.2em;
+    margin-inline-start: 0.125rem;
+    background: var(--vivid);
+    vertical-align: text-bottom;
+  }
+
+  /* Product render: the darker surface, so a black object keeps its edges. */
+  .media-product {
+    background: var(--soft);
+  }
+
+  .product-image {
+    inline-size: min(100%, 30rem);
+    filter: drop-shadow(0 1.5rem 1.5rem oklch(0.2 0.05 258 / 30%));
+  }
+
+  /* A live site, framed with its address. */
+  .browser {
+    inline-size: 100%;
+    max-inline-size: 36rem;
+    border-radius: var(--radius-m);
+    background: var(--card);
+    box-shadow: var(--shadow);
+    overflow: clip;
+  }
+
+  .browser-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-block-end: 1px solid var(--line);
+    color: var(--text-2);
+    font-size: 0.75rem;
+  }
+
+  .browser-dots {
+    display: flex;
+    gap: 0.25rem;
+
+    span {
+      inline-size: 0.5rem;
+      block-size: 0.5rem;
+      border-radius: 50%;
+      background: var(--text-3);
+    }
+  }
+
+  /*
+   * Forced colors drop backgrounds and shadows, so surfaces get an outline and
+   * marks take a system color.
+   */
+  @media (forced-colors: active) {
+    .media,
+    .panel,
+    .terminal,
+    .browser,
+    .sources li,
+    .sources-node,
+    .dictation-model,
+    .keycap,
+    .index > ul > li {
+      border: 1px solid CanvasText;
+    }
+
+    .week-bar,
+    .pipeline-node,
+    .pipeline li::before,
+    .strip span,
+    .swatch-gpu {
+      background: CanvasText;
+    }
+
+    .pipeline-node {
+      color: Canvas;
+    }
   }
 }

@@ -1,7 +1,9 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { ALSO, CHAPTERS, PROFILE } from "./projects";
+import { ALSO, CHAPTERS, IMAGES, PROFILE, TIERS } from "./projects";
 
-const projects = CHAPTERS.flatMap((chapter) => [chapter.feature, ...chapter.rest]);
+const projects = CHAPTERS.flatMap((chapter) => chapter.rows.flat());
 const hrefs = [
   ...Object.values(PROFILE).filter((value) => value.startsWith("http")),
   ...[...projects, ...ALSO].flatMap((project) =>
@@ -41,5 +43,25 @@ describe("portfolio content", () => {
         expect(project.note, project.id).toBeTruthy();
       }
     }
+  });
+
+  it("ships every image in both widths and both formats", () => {
+    for (const image of Object.values(IMAGES)) {
+      for (const width of image.widths) {
+        for (const format of ["avif", "webp"]) {
+          const file = `${image.base}-${width}.${format}`;
+          expect(existsSync(join(process.cwd(), "public", file)), file).toBe(
+            true,
+          );
+        }
+      }
+    }
+  });
+
+  it("draws fngine's experts as whole squares in whole rows", () => {
+    const squares = TIERS.experts / TIERS.perSquare;
+    expect(Number.isInteger(squares)).toBe(true);
+    expect(Number.isInteger(squares / TIERS.columns)).toBe(true);
+    expect(squares % 2).toBe(0);
   });
 });

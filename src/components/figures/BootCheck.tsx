@@ -1,17 +1,17 @@
 import { PREFLIGHT } from "@/data/projects";
-import { Icon } from "./Icon";
+import { Icon } from "../Icon";
 
 /** What the deployment bundle checks before it starts the server. */
-export function Preflight() {
+export function BootCheck() {
   return (
-    <figure className="visual">
-      <div className="preflight">
-        <div className="preflight-head">
+    <figure className="media">
+      <div className="panel bootcheck">
+        <p className="panel-head">
           <span>Boot check</span>
           <span>
             {PREFLIGHT.checks.length} of {PREFLIGHT.checks.length}
           </span>
-        </div>
+        </p>
         <ul>
           {PREFLIGHT.checks.map((check) => (
             <li key={check.label}>
@@ -22,7 +22,7 @@ export function Preflight() {
             </li>
           ))}
         </ul>
-        <p className="preflight-foot">
+        <p className="bootcheck-foot">
           <Icon name="check" />
           {PREFLIGHT.service} started
         </p>
