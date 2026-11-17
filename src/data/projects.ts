@@ -11,8 +11,8 @@ export type Readout = {
 
 /** The picture a project is shown with; each id has a component in `src/components/figures`. */
 export type FigureId =
-  | "boot-check"
-  | "pipeline"
+  | "validate"
+  | "workflow"
   | "installer"
   | "sources"
   | "week"
@@ -24,10 +24,13 @@ export type FigureId =
   | "cloudsprouts";
 
 export type SmallProject = {
+  /** Anchor id, and the project's name in the `tree` index. */
   id: string;
   title: string;
   summary: string;
-  stack: string;
+  /** A few words shown beside the project in the `tree` index. */
+  tag: string;
+  stack: readonly string[];
   links: readonly ProjectLink[];
   /** Shown in place of links when a project has none to offer. */
   note?: string;
@@ -36,16 +39,16 @@ export type SmallProject = {
 
 export type Project = SmallProject & {
   readout: Readout;
-  /** Folded behind "How it works". */
+  /** Folded behind "how it works". */
   details: readonly string[];
   figure: FigureId;
 };
 
 export type Chapter = {
-  /** Also the name of the chapter's color in `globals.css`. */
-  id: "run" | "fast" | "shipped";
+  /** Anchor id, the chapter's directory in the page's prompts, and its color in `globals.css`. */
+  id: "infra" | "perf" | "shipped";
   title: string;
-  /** What the chapter covers, in a few words, for the index at the top of the page. */
+  /** What the chapter covers, shown as a comment in the `tree` index. */
   scope: string;
   intro: string;
   /** One project across the full width, or two side by side. */
@@ -73,9 +76,9 @@ export const PROFILE = {
 
 export const CHAPTERS: readonly Chapter[] = [
   {
-    id: "run",
+    id: "infra",
     title: "Boring to run",
-    scope: "Deployments, pipelines and observability",
+    scope: "deployments, pipelines, observability",
     intro:
       "Deployments pinned to a hash, pipelines without stored secrets, and tooling that shows what a service is doing",
     rows: [
@@ -85,11 +88,12 @@ export const CHAPTERS: readonly Chapter[] = [
           title: "GLM-5.3-Flash deployment bundle",
           summary:
             "A 182 GiB model served from four GPUs, with the image, the checkpoints and all eleven patches pinned by hash and checked before the server starts",
+          tag: "429 tok/s",
           readout: {
             value: "429 tok/s",
             label: "decode on the production profile",
           },
-          stack: "Docker Compose, systemd, SGLang, Python",
+          stack: ["Docker Compose", "systemd", "SGLang", "Python"],
           links: [
             { label: "Source", href: "https://github.com/TomBonness/tpopto" },
           ],
@@ -99,7 +103,7 @@ export const CHAPTERS: readonly Chapter[] = [
             "A change stays only if end-to-end decode improves by at least 3%. Draft width 32 was 27% slower than width 8 in a live comparison, so 8 stayed in production.",
             "Staging runs on a CPU instance against retained volumes, so the four GPUs are billed only while they serve.",
           ],
-          figure: "boot-check",
+          figure: "validate",
         },
       ],
       [
@@ -108,8 +112,9 @@ export const CHAPTERS: readonly Chapter[] = [
           title: "distributr",
           summary:
             "A serverless news hub on AWS, defined in one CDK app and deployed from GitHub Actions without stored credentials",
+          tag: "0 keys in CI",
           readout: { value: "0", label: "AWS keys stored in CI" },
-          stack: "AWS CDK, Lambda, DynamoDB, GitHub Actions",
+          stack: ["AWS CDK", "Lambda", "DynamoDB", "GitHub Actions"],
           links: [
             {
               label: "Source",
@@ -122,18 +127,19 @@ export const CHAPTERS: readonly Chapter[] = [
             "The stack is three DynamoDB tables with point-in-time recovery, an S3 Vectors index, two ARM Lambdas, a throttled HTTP API and a two-hour ingest schedule.",
             "Spend is capped in code: daily LLM budgets and a per-address submission limit.",
           ],
-          figure: "pipeline",
+          figure: "workflow",
         },
         {
           id: "fast-long-context",
           title: "Fast Long Context",
           summary:
             "One-menu installers that take a Linux machine with an RTX 5090 to a running model server, and pick up where they stopped after any interruption",
+          tag: "262,144 tokens",
           readout: {
             value: "262,144",
             label: "tokens of context, up from about 160K",
           },
-          stack: "Bash, Python, CUDA, SGLang",
+          stack: ["Bash", "Python", "CUDA", "SGLang"],
           links: [],
           note: "Walkthrough on request",
           details: [
@@ -150,8 +156,9 @@ export const CHAPTERS: readonly Chapter[] = [
           title: "Daish",
           summary:
             "A terminal console that runs model servers as systemd units and shows what the hardware and each server are doing",
+          tag: "1 Hz",
           readout: { value: "1 Hz", label: "hardware telemetry" },
-          stack: "Python, Textual, systemd, Prometheus, SQLite",
+          stack: ["Python", "Textual", "systemd", "Prometheus", "SQLite"],
           links: [
             { label: "Source", href: "https://github.com/TomBonness/daish" },
           ],
@@ -166,9 +173,9 @@ export const CHAPTERS: readonly Chapter[] = [
     ],
   },
   {
-    id: "fast",
+    id: "perf",
     title: "Fast",
-    scope: "Inference engines in C++ and CUDA",
+    scope: "inference engines in C++ and CUDA",
     intro:
       "Engines for hardware that is always slightly too small, with every speedup measured against the build before it",
     rows: [
@@ -178,11 +185,12 @@ export const CHAPTERS: readonly Chapter[] = [
           title: "Cinference Engine",
           summary:
             "A C++ and CUDA inference engine, built from NInfer, that serves a 27B model with a 256K-token context from one RTX 5090",
+          tag: "290 tok/s",
           readout: {
             value: "290 tok/s",
             label: "on coding chats, about 4× llama.cpp on the same GPU",
           },
-          stack: "C++, CUDA, CMake, Python",
+          stack: ["C++", "CUDA", "CMake", "Python"],
           links: [
             {
               label: "Product page",
@@ -203,11 +211,12 @@ export const CHAPTERS: readonly Chapter[] = [
           title: "fngine",
           summary:
             "An engine for a model too large for the GPU, which splits the work across VRAM, an AVX-512 CPU tier and NVMe",
+          tag: "180–210 tok/s",
           readout: {
             value: "180–210 tok/s",
             label: "decode on one RTX 5090",
           },
-          stack: "C++20, CUDA, AVX-512, io_uring",
+          stack: ["C++20", "CUDA", "AVX-512", "io_uring"],
           links: [],
           note: "Walkthrough on request",
           details: [
@@ -224,7 +233,7 @@ export const CHAPTERS: readonly Chapter[] = [
   {
     id: "shipped",
     title: "Shipped",
-    scope: "Apps, tools and a hardware concept",
+    scope: "apps, tools and a hardware concept",
     intro: "Software people install, with releases on more than one platform",
     rows: [
       [
@@ -233,11 +242,12 @@ export const CHAPTERS: readonly Chapter[] = [
           title: "Cinmux",
           summary:
             "Terminal workspaces for Linux and macOS where every tab is a tmux session, so closing the window never stops a job",
+          tag: "3 front ends",
           readout: {
             value: "3",
             label: "front ends: Linux, macOS and a TUI over SSH",
           },
-          stack: "C++20, Qt 6, wlroots, Swift, tmux",
+          stack: ["C++20", "Qt 6", "wlroots", "Swift", "tmux"],
           links: [
             { label: "Product page", href: "https://kmrl.org/products/cinmux" },
           ],
@@ -256,11 +266,12 @@ export const CHAPTERS: readonly Chapter[] = [
           title: "Lavtype",
           summary:
             "Push-to-talk dictation in Rust that types into the focused app, with speech recognition kept on the machine",
+          tag: "3 CI targets",
           readout: {
             value: "3",
             label: "targets built and tested in CI",
           },
-          stack: "Rust, sherpa-onnx, GitHub Actions",
+          stack: ["Rust", "sherpa-onnx", "GitHub Actions"],
           links: [
             {
               label: "Product page",
@@ -280,11 +291,12 @@ export const CHAPTERS: readonly Chapter[] = [
           title: "Open Micro",
           summary:
             "An open-source desktop controller designed end to end, from the two boards to the firmware and host tools. Still a concept, not a qualified build",
+          tag: "20-byte frames",
           readout: {
             value: "20 bytes",
             label: "per protocol frame",
           },
-          stack: "Rust, C, Zephyr, KiCad",
+          stack: ["Rust", "C", "Zephyr", "KiCad"],
           links: [
             {
               label: "Product page",
@@ -307,14 +319,15 @@ export const CHAPTERS: readonly Chapter[] = [
   },
 ];
 
-/** Earlier end-to-end builds and small tools. The ones with a figure are shown as cards. */
+/** Earlier end-to-end builds and small tools. The ones with a figure get a window of their own. */
 export const ALSO: readonly SmallProject[] = [
   {
     id: "chipguard",
     title: "ChipGuard",
     summary:
       "Defect prediction for semiconductor wafers with drift monitoring, deployed with Docker and GitHub Actions",
-    stack: "PyTorch, Flask, Angular",
+    tag: "live",
+    stack: ["PyTorch", "Flask", "Angular"],
     links: [
       { label: "Live site", href: "https://chipguardai.com/" },
       { label: "Source", href: "https://github.com/TomBonness/semiguard" },
@@ -326,7 +339,8 @@ export const ALSO: readonly SmallProject[] = [
     title: "CloudSprouts",
     summary:
       "An ESP32 garden sensor that reports over MQTT to AWS IoT Core, and a dashboard that is still receiving its readings",
-    stack: "C, ESP-IDF, Lambda, DynamoDB",
+    tag: "live",
+    stack: ["C", "ESP-IDF", "Lambda", "DynamoDB"],
     links: [
       { label: "Live site", href: "https://www.cloudsprouts.com/" },
       {
@@ -345,7 +359,8 @@ export const ALSO: readonly SmallProject[] = [
     title: "fasterm",
     summary:
       "A terminal speed-reader that replays shell output one token at a time",
-    stack: "Rust",
+    tag: "Rust",
+    stack: ["Rust"],
     links: [{ label: "Source", href: "https://github.com/TomBonness/fasterm" }],
   },
   {
@@ -353,7 +368,8 @@ export const ALSO: readonly SmallProject[] = [
     title: "Don’t Switch Mics",
     summary:
       "A macOS menu bar utility that puts your chosen microphone back when the system switches inputs",
-    stack: "Swift",
+    tag: "Swift",
+    stack: ["Swift"],
     links: [
       { label: "Source", href: "https://github.com/TomBonness/dontswitchmics" },
     ],
@@ -362,29 +378,74 @@ export const ALSO: readonly SmallProject[] = [
     id: "pgui",
     title: "pgui",
     summary: "A web framework where PostgreSQL is the server, in 125 lines of SQL",
-    stack: "PL/pgSQL",
+    tag: "125 lines of SQL",
+    stack: ["PL/pgSQL"],
     links: [{ label: "Source", href: "https://github.com/TomBonness/pangres" }],
   },
 ];
 
-/** The boot check of the deployment bundle, with its real pins shortened. */
-export const PREFLIGHT = {
-  service: "sglang-glm.service",
-  checks: [
-    { label: "Runtime image", value: "sha256:3a97bd50…409290" },
-    { label: "Target checkpoint", value: "caca4e6a…e27177" },
-    { label: "Draft checkpoint", value: "bf582e4e…737d2a" },
-    { label: "Runtime patches", value: "11 of 11" },
+/** Facts for the `neofetch` block in the intro. */
+export const NEOFETCH: readonly { key: string; value: string }[] = [
+  { key: "Role", value: "Software engineer" },
+  { key: "Focus", value: "SRE, DevOps, systems" },
+  { key: "Location", value: "Austin, Texas" },
+  { key: "Langs", value: "C++20, CUDA, Rust, Python, TypeScript, Swift" },
+  { key: "Infra", value: "AWS CDK, Docker, systemd, GitHub Actions" },
+  { key: "GPU", value: "RTX 5090" },
+  { key: "Status", value: "Open to new roles" },
+];
+
+/**
+ * The opening lines of the deployment bundle's static validator, as it prints
+ * them (`validate_bundle.py` in the bundle's repository), each after "PASS:".
+ */
+export const VALIDATE = {
+  command: "python3 validate_bundle.py",
+  lines: [
+    "bundle targets four GPUs",
+    "bundle targets SM120",
+    "SM120 CUTLASS MoE selected",
+    "patched sparse-MLA decode selected",
+    "DFlash profile pins the image SGLang revision",
+    "DFlash profile pins the draft checkpoint revision",
+    "DFlash profile caps context at 256K",
+    "DFlash profile limits concurrency to one request",
+    "DFlash benchmark contract permits one request",
+    "manifest locks all eleven runtime patches",
+    "locked hash matches patches/sglang-glm5_next-debug.py",
+    "Python compiles patches/sglang-glm5_next-debug.py",
   ],
 } as const;
 
-/** What distributr's workflow does on a push to main, in order. */
-export const PIPELINE = [
-  { icon: "list-checks", label: "Check", detail: "Typecheck, 31 tests, cdk synth" },
-  { icon: "key-round", label: "Assume a role", detail: "Over GitHub OIDC, with no stored keys" },
-  { icon: "cloud-upload", label: "Deploy", detail: "One CDK app, from main only" },
-  { icon: "activity", label: "Smoke check", detail: "Fails unless /healthz answers" },
-] as const;
+/** distributr's deploy job, line for line from its CI workflow. `mark` highlights a line. */
+export const WORKFLOW = {
+  file: ".github/workflows/ci.yml",
+  lines: [
+    { n: 24, text: "  deploy:" },
+    { n: 25, text: "    needs: check" },
+    {
+      n: 26,
+      text: "    if: github.event_name == 'push' && github.ref == 'refs/heads/main'",
+    },
+    { n: 28, text: "    permissions:" },
+    { n: 29, text: "      contents: read" },
+    { n: 30, text: "      id-token: write", mark: true },
+    { n: 41, text: "      - uses: aws-actions/configure-aws-credentials@v6" },
+    { n: 42, text: "        with:" },
+    {
+      n: 43,
+      text: "          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}",
+      mark: true,
+    },
+    { n: 44, text: "          aws-region: us-east-1" },
+    { n: 45, text: "      - run: npm run deploy" },
+    { n: 46, text: "      - name: Smoke check", mark: true },
+    {
+      n: 47,
+      text: "        run: curl -fsS \"$(jq -r '.distributr.ApiUrl' infra/cdk-outputs.json)/healthz\"",
+    },
+  ],
+} as const;
 
 /** The menu a Fast Long Context installer prints, in its own words. */
 export const INSTALLER = {
@@ -400,7 +461,7 @@ export const INSTALLER = {
   prompt: "Choose an option:",
 } as const;
 
-/** What Daish reads, and what it does with it. */
+/** What Daish reads, and what it drives. */
 export const SOURCES = {
   reads: [
     { name: "NVML", detail: "GPU load, VRAM, temperature, power" },
@@ -454,11 +515,11 @@ export const IMAGES = {
     alt: "Cinmux on macOS: the same sidebar of pinned tabs and folders, beside a split terminal with a passing Swift test run",
   },
   openMicro: {
-    base: "/projects/open-micro",
+    base: "/projects/open-micro-exploded",
     widths: [600, 1200],
     width: 1200,
-    height: 823,
-    alt: "Open Micro: a small black desktop controller with twelve keys and an encoder knob",
+    height: 1600,
+    alt: "An exploded view of Open Micro: keycaps and an encoder knob over twelve switches, the top board, the light-carrying wall, the lower board, the battery and the base",
   },
   chipguard: {
     base: "/projects/chipguard",
@@ -476,19 +537,34 @@ export const IMAGES = {
   },
 } as const satisfies Record<string, ImageAsset>;
 
-export const TOOLBOX: readonly { label: string; items: string }[] = [
+export const TOOLBOX: readonly { label: string; items: readonly string[] }[] = [
   {
-    label: "Languages",
-    items: "C++20, CUDA, Rust, Python, TypeScript, Swift, C, SQL, Bash",
+    label: "languages",
+    items: ["C++20", "CUDA", "Rust", "Python", "TypeScript", "Swift", "C", "SQL", "Bash"],
   },
   {
-    label: "Infrastructure",
-    items:
-      "AWS CDK, Lambda, DynamoDB, API Gateway and IoT Core, Docker, systemd, GitHub Actions with OIDC",
+    label: "infrastructure",
+    items: [
+      "AWS CDK",
+      "Lambda",
+      "DynamoDB",
+      "API Gateway",
+      "IoT Core",
+      "Docker",
+      "systemd",
+      "GitHub Actions",
+      "OIDC",
+    ],
   },
   {
-    label: "Operations",
-    items:
-      "Prometheus metrics, cgroups, journald, pinned and hash-verified artifacts, resumable updates",
+    label: "operations",
+    items: [
+      "Prometheus",
+      "cgroups",
+      "journald",
+      "pinned artifacts",
+      "hash checks",
+      "resumable updates",
+    ],
   },
 ];

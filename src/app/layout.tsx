@@ -1,18 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const sans = IBM_Plex_Sans({
+/** The terminal: headings, labels, code and figures. Variable, so every weight comes in one file. */
+const mono = JetBrains_Mono({
   subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["400", "500"],
+  variable: "--font-mono",
   display: "swap",
 });
 
-const mono = IBM_Plex_Mono({
+/** Running text, which reads more easily in a proportional face. */
+const sans = Inter({
   subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["400", "500"],
+  variable: "--font-sans",
   display: "swap",
 });
 
@@ -37,12 +37,10 @@ export const metadata: Metadata = {
   other: { "text-scale": "scale" },
 };
 
+/** A terminal is dark: one scheme, declared so the browser's own controls match it. */
 export const viewport: Viewport = {
-  colorScheme: "light dark",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fbfaf7" },
-    { media: "(prefers-color-scheme: dark)", color: "#110f0d" },
-  ],
+  colorScheme: "dark",
+  themeColor: "#11111b",
 };
 
 export default function RootLayout({
@@ -51,7 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
+    <html lang="en" className={`${mono.variable} ${sans.variable}`}>
       <body>{children}</body>
     </html>
   );

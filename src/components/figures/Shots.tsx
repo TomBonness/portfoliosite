@@ -1,16 +1,21 @@
 import { IMAGES, type ImageAsset } from "@/data/projects";
 import { Picture } from "../Picture";
 
-/** The Open Micro render on its own, since the object is the point. */
+/** The Open Micro render, pulled apart into its layers. */
 export function ProductShot() {
   return (
-    <figure className="media media-product">
-      <Picture
-        image={IMAGES.openMicro}
-        sizes="(min-width: 64em) 28rem, 76vw"
-        className="product-image"
-      />
-      <figcaption>A concept render, not a photograph</figcaption>
+    <figure className="screen">
+      <div className="screen-body screen-shots">
+        <Picture
+          image={IMAGES.openMicro}
+          sizes="(min-width: 64em) 18rem, 60vw"
+          className="product-image"
+        />
+      </div>
+      <figcaption>
+        A concept render of every layer, from the keycaps down to the base. Not
+        a photograph.
+      </figcaption>
     </figure>
   );
 }
@@ -24,17 +29,17 @@ export function BrowserShot({
   host: string;
 }) {
   return (
-    <figure className="media">
+    <figure className="screen">
       <div className="browser">
         <p className="browser-bar">
-          <span className="browser-dots" aria-hidden="true">
-            <span />
-            <span />
-            <span />
+          <span className="browser-lights" aria-hidden="true">
+            <i />
+            <i />
+            <i />
           </span>
           {host}
         </p>
-        <Picture image={image} sizes="(min-width: 64em) 30rem, 84vw" />
+        <Picture image={image} sizes="(min-width: 64em) 34rem, 88vw" />
       </div>
       <figcaption>The live site, captured in November 2026</figcaption>
     </figure>

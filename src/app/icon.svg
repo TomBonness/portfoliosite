@@ -1,8 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#fbfaf7"/>
-  <g stroke-width="6" stroke-linecap="round">
-    <path d="M32 13v38" stroke="#df500c"/>
-    <path d="M15.5 22.5l33 19" stroke="#069253"/>
-    <path d="M15.5 41.5l33-19" stroke="#3177dc"/>
-  </g>
+  <rect width="64" height="64" rx="14" fill="#1e1e2e"/>
+  <path fill="#f38ba8" d="M6.0 15.6h4.0v4.0h-4.0zM10.8 15.6h4.0v4.0h-4.0zM15.6 15.6h4.0v4.0h-4.0zM20.4 15.6h4.0v4.0h-4.0zM25.2 15.6h4.0v4.0h-4.0zM34.8 15.6h4.0v4.0h-4.0zM39.6 15.6h4.0v4.0h-4.0zM44.4 15.6h4.0v4.0h-4.0zM49.2 15.6h4.0v4.0h-4.0z"/>
+  <path fill="#fab387" d="M15.6 20.4h4.0v4.0h-4.0zM34.8 20.4h4.0v4.0h-4.0zM54.0 20.4h4.0v4.0h-4.0z"/>
+  <path fill="#f9e2af" d="M15.6 25.2h4.0v4.0h-4.0zM34.8 25.2h4.0v4.0h-4.0zM54.0 25.2h4.0v4.0h-4.0z"/>
+  <path fill="#a6e3a1" d="M15.6 30.0h4.0v4.0h-4.0zM34.8 30.0h4.0v4.0h-4.0zM39.6 30.0h4.0v4.0h-4.0zM44.4 30.0h4.0v4.0h-4.0zM49.2 30.0h4.0v4.0h-4.0z"/>
+  <path fill="#94e2d5" d="M15.6 34.8h4.0v4.0h-4.0zM34.8 34.8h4.0v4.0h-4.0zM54.0 34.8h4.0v4.0h-4.0z"/>
+  <path fill="#89b4fa" d="M15.6 39.6h4.0v4.0h-4.0zM34.8 39.6h4.0v4.0h-4.0zM54.0 39.6h4.0v4.0h-4.0z"/>
+  <path fill="#cba6f7" d="M15.6 44.4h4.0v4.0h-4.0zM34.8 44.4h4.0v4.0h-4.0zM39.6 44.4h4.0v4.0h-4.0zM44.4 44.4h4.0v4.0h-4.0zM49.2 44.4h4.0v4.0h-4.0z"/>
 </svg>

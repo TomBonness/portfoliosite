@@ -45,11 +45,12 @@ function squaresPath(onGpu: boolean, stroke: number): string {
   return d;
 }
 
-/** fngine's routed experts as a field of squares: filled on the GPU, hollow off it. */
+/** fngine's routed experts as a memory map: filled squares on the GPU, hollow ones off it. */
 export function Tiers() {
   return (
-    <figure className="media">
-      <div className="tiers">
+    <figure className="screen">
+      <div className="screen-body tiers">
+        <p className="screen-comment">routed experts by tier, 1 square = {TIERS.perSquare}</p>
         <svg
           viewBox={`0 0 ${TIERS.columns * PITCH - 2} ${ROWS * PITCH - 2}`}
           role="img"
@@ -70,10 +71,9 @@ export function Tiers() {
         </ul>
       </div>
       <figcaption>
-        Each square is {TIERS.perSquare} of the model’s{" "}
-        {TIERS.experts.toLocaleString("en-US")} routed experts. About half sit
-        on the GPU. Which half follows real usage, so the pattern here is only
-        an example.
+        The model’s {TIERS.experts.toLocaleString("en-US")} routed experts.
+        About half sit on the GPU. Which half follows real usage, so this
+        pattern is only an example.
       </figcaption>
     </figure>
   );

@@ -11,6 +11,17 @@ export function ProjectReadout({ readout }: { readout: Readout }) {
   );
 }
 
+/** The technologies a project is built with, as tags. */
+export function Stack({ items }: { items: readonly string[] }) {
+  return (
+    <ul className="tags" aria-label="Built with">
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  );
+}
+
 /** A project's outbound links, or its note when it has none to offer. */
 export function ProjectLinks({
   title,

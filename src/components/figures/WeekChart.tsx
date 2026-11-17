@@ -4,36 +4,33 @@ import { WEEK } from "@/data/projects";
 /** Top of the chart's scale, in tokens per second. */
 const SCALE = 1000;
 
-/** One week of releases against the same benchmark: columns with room, rows without. */
+/** One week of releases against the same benchmark, as block bars in a terminal. */
 export function WeekChart() {
   return (
-    <figure className="media">
-      <div className="week">
-        <p className="week-head">
-          <span>One week on a fixed benchmark</span>
-          <span>tok/s</span>
+    <figure className="screen">
+      <div className="screen-body">
+        <p className="screen-comment">
+          decode tok/s, 32K-token prompt, one RTX 5090
         </p>
-        <ol>
+        <ol className="bars">
           {WEEK.map((point) => (
             <li
               key={point.date}
               style={{ "--v": point.value / SCALE } as CSSProperties}
             >
-              <div className="week-plot">
-                <span className="week-value">{Math.round(point.value)}</span>
-                <span className="week-bar" aria-hidden="true" />
-              </div>
-              <p className="week-caption">
-                <span className="week-date">{point.date}</span>
-                <span className="week-label">{point.label}</span>
-              </p>
+              <span className="bar-date">{point.date}</span>
+              <span className="bar-track" aria-hidden="true">
+                <span className="bar-fill" />
+              </span>
+              <span className="bar-value">{Math.round(point.value)}</span>
+              <span className="bar-label">{point.label}</span>
             </li>
           ))}
         </ol>
       </div>
       <figcaption>
-        Decode speed after a 32K-token prompt on one RTX 5090. The benchmark
-        text repeats, which favors the last two steps.
+        One week of releases on the same benchmark. Its text repeats, which
+        favors the last two steps.
       </figcaption>
     </figure>
   );
