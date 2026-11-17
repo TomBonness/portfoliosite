@@ -1,55 +1,31 @@
 import type { Project } from "@/data/projects";
-import { ProjectArtwork } from "./ProjectArtwork";
+import { ProjectLinks, StackList } from "./ProjectMeta";
 
-type ProjectCardProps = { project: Project };
-
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({
+  project,
+  number,
+}: {
+  project: Project;
+  number: string;
+}) {
   const titleId = `${project.id}-title`;
-  const destination =
-    project.liveUrl ?? project.repoLinks.find((link) => link.href)?.href;
 
   return (
-    <article
-      className="project-card"
-      aria-labelledby={titleId}
-      data-category={project.category}
-    >
-      <a
-        className="project-art-link"
-        href={destination}
-        aria-label={`Explore ${project.title}`}
-      >
-        <ProjectArtwork id={project.id} />
-        <span className="visual-arrow" aria-hidden="true">
-          ↗
-        </span>
-      </a>
-      <h3 id={titleId}>
-        <a href={destination}>{project.title}</a>
-      </h3>
-      <p>{project.summary}</p>
-      <ul className="stack-list" aria-label={`${project.title} stack`}>
-        {project.stack.map((item) => (
-          <li key={item}>{item}</li>
+    <article className="card" id={project.id} aria-labelledby={titleId}>
+      <p className="entry-kind">
+        <span className="entry-number">{number}</span>
+        {project.kind}
+      </p>
+      <h3 id={titleId}>{project.title}</h3>
+      <p className="card-summary">{project.summary}</p>
+      <ul className="highlights">
+        {project.highlights.map((highlight) => (
+          <li key={highlight}>{highlight}</li>
         ))}
       </ul>
-      <div className="project-links" aria-label={`${project.title} links`}>
-        {project.liveUrl && (
-          <a href={project.liveUrl}>
-            Live site <span aria-hidden="true">↗</span>
-          </a>
-        )}
-        {project.repoLinks.map((link) =>
-          link.href ? (
-            <a key={link.href} href={link.href}>
-              {link.label} <span aria-hidden="true">↗</span>
-            </a>
-          ) : (
-            <span className="repo-badge" key={link.label}>
-              Source not public
-            </span>
-          ),
-        )}
+      <div className="card-foot">
+        <StackList stack={project.stack} />
+        <ProjectLinks project={project} />
       </div>
     </article>
   );
