@@ -1,19 +1,20 @@
 import { describe, expect, it } from "vitest";
-import { PROFILE, SMALL_TOOLS, WORK_SECTIONS } from "./projects";
+import { ALSO, CHAPTERS, PROFILE } from "./projects";
 
-const projects = WORK_SECTIONS.flatMap((section) => section.projects);
+const projects = CHAPTERS.flatMap((chapter) => [chapter.feature, ...chapter.rest]);
 const hrefs = [
   ...Object.values(PROFILE).filter((value) => value.startsWith("http")),
-  ...projects.flatMap((project) => project.links.map((link) => link.href)),
-  ...SMALL_TOOLS.map((tool) => tool.href),
+  ...[...projects, ...ALSO].flatMap((project) =>
+    project.links.map((link) => link.href),
+  ),
 ];
 
 describe("portfolio content", () => {
-  it("gives every project and tool a unique anchor id", () => {
+  it("gives every chapter and project a unique anchor id", () => {
     const ids = [
-      ...WORK_SECTIONS.map((section) => section.id),
+      ...CHAPTERS.map((chapter) => chapter.id),
       ...projects.map((project) => project.id),
-      ...SMALL_TOOLS.map((tool) => tool.id),
+      ...ALSO.map((project) => project.id),
     ];
     expect(new Set(ids).size).toBe(ids.length);
   });

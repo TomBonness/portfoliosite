@@ -1,23 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import {
-  IBM_Plex_Mono,
-  IBM_Plex_Sans,
-  Instrument_Serif,
-} from "next/font/google";
+import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 
 const sans = IBM_Plex_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["400", "500", "600"],
-  display: "swap",
-});
-
-const serif = Instrument_Serif({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  weight: "400",
-  style: ["normal", "italic"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -50,8 +38,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   colorScheme: "light dark",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f5f3ec" },
-    { media: "(prefers-color-scheme: dark)", color: "#121310" },
+    { media: "(prefers-color-scheme: light)", color: "#f7f4ee" },
+    { media: "(prefers-color-scheme: dark)", color: "#161513" },
   ],
 };
 
@@ -61,10 +49,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${sans.variable} ${serif.variable} ${mono.variable}`}
-    >
+    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
       <body>{children}</body>
     </html>
   );
